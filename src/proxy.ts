@@ -19,5 +19,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/decisions/:path*"],
+  matcher: ["/decisions/:path*", "/contact"],
 };

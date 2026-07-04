@@ -53,11 +53,13 @@ export function UserMenu({ image, name }: UserMenuProps) {
       </button>
 
       {isOpen && (
-        <div
-          role="menu"
-          className="absolute right-0 z-10 mt-2 w-44 rounded-card border border-gray-300 bg-white p-3 shadow-lg"
-        >
-          {name && <p className="mb-2 truncate text-sm font-medium">{name}</p>}
+        // Not `role="menu"` — that ARIA role requires menuitem children with
+        // arrow-key navigation, which this simple disclosure popover (a name
+        // label + one button) doesn't implement (axe: aria-required-children,
+        // found via real session testing — this popover's open state was
+        // never automatable before cookie-based test auth existed).
+        <div className="absolute right-0 z-10 mt-2 w-64 rounded-card border border-gray-300 bg-white p-3 shadow-lg">
+          {name && <p className="mb-3 truncate text-sm font-medium">{name}</p>}
           <SignOutButton />
         </div>
       )}
