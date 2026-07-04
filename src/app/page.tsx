@@ -54,6 +54,8 @@ export default async function Home() {
       title: "Lorem Ipsum",
       subtitle:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      backgroundImage: "/img/image2.png",
+      // Only used as a fallback if backgroundImage is ever removed.
       backgroundClassName: "bg-gradient-to-br from-gray-700 via-gray-600 to-gray-900",
       features: [
         {
