@@ -1,14 +1,11 @@
 <!--
 Sync Impact Report
 ==================
-Version change: 1.1.0 → 1.2.0
+Version change: 1.2.0 → 1.3.0
 Modified principles:
-  - VII. Performance & Quality Bar (Lighthouse): threshold raised from 90+ to 95+ across all four categories
-Added sections: none (Core Principles unchanged in count/structure)
-Modified sections:
-  - Technology Constraints: hosting/deployment target now fixed (Vercel), no longer listed as deferred;
-    added explicit Google + GitHub SSO requirement (specific auth provider/library still deferred to
-    the authentication feature's /speckit-plan)
+  - VII. Performance & Quality Bar (Lighthouse): mandatory 95+ threshold narrowed from all four
+    categories to just Performance and Accessibility; Best Practices and SEO no longer mandatory
+Added sections: none
 Removed sections: none
 Templates requiring updates:
   - .specify/templates/plan-template.md   ✅ no changes needed (Constitution Check gate is generic, derives from this file at plan time)
@@ -114,17 +111,20 @@ and inconsistent styling reads as unfinished in a portfolio piece.
 
 ### VII. Performance & Quality Bar (Lighthouse)
 
-Every shipped page MUST target a Lighthouse score of 95 or higher in each
-of the Performance, Accessibility, Best Practices, and SEO categories,
-measured against a production build. A phase's implementation MUST NOT be
-marked done while any category scores below 95 without an explicit,
-documented justification recorded in that feature's plan.
+Every shipped page MUST target a Lighthouse score of 95 or higher in the
+Performance and Accessibility categories, measured against a production
+build. A phase's implementation MUST NOT be marked done while either
+category scores below 95 without an explicit, documented justification
+recorded in that feature's plan. Best Practices and SEO scores are not
+held to a mandatory threshold.
 
 **Rationale**: "As high as possible" isn't independently checkable, so this
 constitution adopts a concrete 95+ bar — above the conventional 90 "green"
-threshold — reflecting the priority placed on polish for a project meant to
-be demonstrated to others, while still leaving a documented-exception path
-for the rare case where the last few points aren't worth the effort.
+threshold — for the two categories that most directly affect real users and
+reinforce Principle IV's accessibility requirement. Best Practices and SEO
+matter less for a personal tool that isn't optimizing for search
+discoverability, so holding them to the same mandatory bar added rigor
+without adding value.
 
 ## Technology Constraints
 
@@ -187,4 +187,4 @@ materially expanded guidance; PATCH for clarifications and wording fixes.
 Constitution Check confirming the plan does not violate any NON-NEGOTIABLE
 principle (II, III, or IV) before `/speckit-tasks` is run.
 
-**Version**: 1.2.0 | **Ratified**: 2026-07-04 | **Last Amended**: 2026-07-04
+**Version**: 1.3.0 | **Ratified**: 2026-07-04 | **Last Amended**: 2026-07-04
