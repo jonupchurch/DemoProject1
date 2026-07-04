@@ -165,6 +165,10 @@ src/
 │       ├── local.ts               # dev/test driver: Node fs/promises, gitignored data dir
 │       └── vercel-blob.ts         # production driver: @vercel/blob
 └── components/
+    ├── nav/
+    │   └── nav-links.tsx          # MODIFIED: adds a second, independent flyout ("Travel") next
+    │                               # to the existing Decisions flyout — Map + List always visible
+    │                               # (public, FR-005), "Add a Pin" shown only when signed in
     └── travel/
         ├── travel-map.tsx         # Client Component: MapLibre map, dynamic import (ssr: false)
         ├── pin-marker-popup.tsx   # marker click → photo preview + link to the pin's detail page
@@ -188,7 +192,10 @@ check); all mutations go through Server Actions in `src/actions/travel.ts`, the 
 to write pins/photos or call `PhotoStorage`, mirroring `src/actions/decisions.ts`'s existing role.
 `/travel/list` gets its own route (rather than a client-side toggle on `/travel`) to match how
 Decision Journal already gives its list/timeline/dashboard each their own route reachable from one
-nav flyout (constitution's established multi-app nav pattern, `nav-links.tsx`).
+nav flyout (constitution's established multi-app nav pattern, `nav-links.tsx`). This app gets its
+own "Travel" flyout the same way — but unlike the Decisions flyout, which is hidden entirely until
+signed in, the Travel flyout trigger and its Map/List entries are always visible (FR-005 makes
+browsing public); only the flyout's "Add a Pin" entry is conditional on being signed in.
 
 ## Complexity Tracking
 
