@@ -178,6 +178,13 @@ in again.
   specified here.
 - Account settings/profile management (e.g., changing display name, disconnecting a linked
   provider, deleting an account) are out of scope for this phase.
-- The sign-in prompt is the only public-facing page; the home page's existing content is treated as
-  the signed-out experience, and it directs signed-in visitors straight to their decisions list
-  instead.
+- **2026-07-04 revision**: the home page is a public showcase page visible to everyone, signed in
+  or not — it no longer redirects signed-in visitors away. A signed-out visitor sees the sign-in
+  prompt on this same page; a signed-in visitor sees a "go to your decisions" link instead. An
+  additional public `/about` page was added. A shared navigation bar (Home / About / Decisions,
+  plus the sign-in link or the account avatar/sign-out menu) now appears on every page, replacing
+  the decisions-only header this phase originally shipped with. This supersedes this section's
+  original assumption that the sign-in prompt was the only public-facing page and that signed-in
+  visitors were redirected away from it — that behavior was intentionally changed once the project
+  owner decided the home page should double as a portfolio showcase (see plan.md's Post-Implementation
+  Amendments).

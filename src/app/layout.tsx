@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { NavBar } from "@/components/nav/nav-bar";
 
 export const metadata: Metadata = {
-  title: "DecisionTracker",
-  description: "A demo project for tracking decisions",
+  title: "Decision Journal",
+  description: "Track your decisions before you make them, then see how your instincts held up.",
 };
 
 export default function RootLayout({
@@ -13,7 +14,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <NavBar />
+        {children}
+      </body>
     </html>
   );
 }

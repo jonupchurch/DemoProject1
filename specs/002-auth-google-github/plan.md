@@ -181,3 +181,37 @@ requires no changes to `src/lib/decisions.ts` beyond the import.
 
 *No constitution violations require justification. Table intentionally left empty — see Constraints
 above for why the split-config pattern is a framework requirement, not an optional abstraction.*
+
+## Post-Implementation Amendments
+
+**2026-07-04 — Global navigation, home page showcase content, About page.** After this phase
+shipped and was verified end-to-end, the project owner asked for a UI pass on top of it, implemented
+directly rather than through a new spec-kit cycle (presentational change, no new data/security
+requirements):
+
+- **`src/components/nav/nav-bar.tsx`** (new, Server Component) — a shared nav bar rendered from the
+  root layout (`src/app/layout.tsx`), appearing on every page. Shows brand + `nav-links.tsx` (Home /
+  About / Decisions, active-state highlighted via `usePathname`) + either a "Sign in" link or
+  **`src/components/auth/user-menu.tsx`** (new, Client Component): an avatar button (the signed-in
+  user's `image`, falling back to their name's first initial) that opens a small popover containing
+  `sign-out-button.tsx`, closing on outside-click or Escape.
+- **`src/app/decisions/layout.tsx` simplified** — its own header (built in this phase's US4) is
+  removed; the auth guard (`requireCurrentUserId()`) is unchanged and still the actual enforcement
+  point. Sign-out now lives in the global nav's `UserMenu` instead.
+- **`src/app/page.tsx` behavior change** — no longer redirects signed-in visitors to `/decisions`
+  (this phase's original US1 behavior). The home page is now a public showcase page for anyone,
+  signed in or not, with project description/features and a GitHub link; the CTA adapts (sign-in
+  buttons vs. a "go to your decisions" link) based on session state. See spec.md's Assumptions for
+  the corresponding update — FR-001 through FR-009 are otherwise unaffected (sign-in, linking, data
+  isolation, and sign-out itself all work exactly as originally spec'd).
+- **`src/app/about/page.tsx`** (new) — a public bio/portfolio page, placeholder content pending the
+  project owner's real copy.
+- **`next.config.js`** — added `images.remotePatterns` for `lh3.googleusercontent.com` (Google
+  avatars) and `avatars.githubusercontent.com` (GitHub avatars) so `next/image` can render them.
+
+Tests added: `tests/unit/user-menu.test.tsx` (avatar/fallback rendering, open/close via click/
+Escape/outside-click) and `tests/unit/nav-links.test.tsx` (active-link state per route). Verified
+with axe (0 violations on `/` and `/about`) and browser checks of nav/redirect behavior for
+signed-out visitors. **Pending**: the signed-in avatar rendering (a real Google/GitHub profile image
+showing correctly in the nav) still needs a manual check by the project owner — automated browser
+tools can't drive a real Google/GitHub sign-in (research.md §6).
