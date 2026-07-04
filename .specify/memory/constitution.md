@@ -1,27 +1,26 @@
 <!--
 Sync Impact Report
 ==================
-Version change: 1.3.0 → 1.4.0
+Version change: 1.4.0 → 2.0.0
 Modified principles:
-  - II. Extensive Test Coverage: rationale's phase count de-hardcoded ("five phases" → "several
-    phases") since Development Workflow now has six
-Added sections:
-  - Purpose (new, precedes Core Principles): reframes the project as a multi-app personal
-    portfolio site; Decision Journal is the first of several planned mini-apps
-  - Technology Constraints → "Multi-App Structure" paragraph: routing/layout rules for future
-    mini-apps (flat top-level routes, shared app-shell layout distinct from the showcase nav)
+  - V. Transparent AI Assistance: redefined from an active phase-5 rollout plan (per-decision
+    summaries, then cross-decision patterns) to a dormant, standing rule — the project owner
+    decided Decision Journal won't get AI assistance after all (not enough value for this app,
+    weighed against the cost/complexity of a third-party AI API). The principle is kept in place,
+    unrenumbered, only so it still governs *if* AI content is ever added to any mini-app here, and
+    so historical Constitution Check sections referencing it by number stay coherent.
+Added sections: none
 Removed sections: none
-Development Workflow: added Phase 6 (Design & Layout — site-wide design system refinement and
-  multi-app scaffolding), scheduled after phases 1-5 (Decision Journal's full build-out)
+Development Workflow: removed the "AI assistance" phase entirely (was #5 — never implemented, no
+  specs/ folder exists for it, dropped rather than deferred). "Design & Layout" renumbered from
+  #6 to #5; its "(phases 1-5)" dependency note updated to "(phases 1-4)".
 Templates requiring updates:
   - .specify/templates/plan-template.md   ✅ no changes needed (Constitution Check gate is generic, derives from this file at plan time)
   - .specify/templates/spec-template.md   ✅ no changes needed (no hardcoded principle references)
   - .specify/templates/tasks-template.md  ✅ no changes needed (no hardcoded principle references)
   - .claude/skills/speckit-*/SKILL.md     ✅ no changes needed (framework-provided, no embedded project principle text)
   - README.md / docs/quickstart.md        n/a (do not exist yet)
-Follow-up TODOs:
-  - When Phase 6 is actually reached, /speckit-specify MUST enumerate which mini-app(s) beyond
-    Decision Journal (if any yet exist) are in scope for that pass — none are named here by design.
+Follow-up TODOs: none
 -->
 
 # Jon Upchurch Showcase Constitution
@@ -103,15 +102,19 @@ rather than asserted.
 
 ### V. Transparent AI Assistance
 
-Any AI-generated content — per-decision summaries now, cross-decision
-pattern insights later — MUST be visibly labeled as AI-generated in the UI.
-AI-generated text MUST be grounded only in the user's own logged data; the
-system MUST NOT present fabricated facts, patterns, or statistics that
-cannot be derived from the user's actual entries.
+Decision Journal itself will not get AI-generated content — the project owner decided this
+doesn't add enough value to this particular app to justify the added cost and complexity of
+integrating a third-party AI API, so the "AI assistance" phase has been dropped from the
+Development Workflow entirely, not deferred. This principle is retained, dormant, as a standing
+site-wide rule rather than deleted: **if** AI-generated content is ever added to Decision Journal
+or to any other mini-app hosted on this site, it MUST be visibly labeled as AI-generated in the
+UI, and MUST be grounded only in that app's own user-logged data — it MUST NOT present fabricated
+facts, patterns, or statistics that cannot be derived from the user's actual entries.
 
-**Rationale**: A calibration tool that quietly hallucinates false patterns
-about someone's own decisions would undermine the entire premise of the
-app — trust in the numbers is the product.
+**Rationale**: Kept rather than removed so the reasoning behind it survives for any future AI
+feature, anywhere on this site, and so historical Constitution Check sections (phases 1-4's
+plan.md files, which already reference this principle by number as "N/A") remain coherent instead
+of pointing at a renumbered or vanished principle.
 
 ### VI. Clean, Elegant Design
 
@@ -185,11 +188,9 @@ before the next phase begins:
 2. Authentication
 3. Dashboard and calibration charts
 4. Filtering, search, and timeline polish
-5. AI assistance — per-decision summaries first, cross-decision pattern
-   insights afterward
-6. Design & Layout — site-wide design system refinement and multi-app
+5. Design & Layout — site-wide design system refinement and multi-app
    scaffolding, carried out once Decision Journal's own feature set
-   (phases 1-5) is complete
+   (phases 1-4) is complete
 
 A later phase MUST NOT begin implementation before the prior phase's spec
 is implemented and reasonably functional, since each phase depends on data
@@ -216,4 +217,4 @@ materially expanded guidance; PATCH for clarifications and wording fixes.
 Constitution Check confirming the plan does not violate any NON-NEGOTIABLE
 principle (II, III, or IV) before `/speckit-tasks` is run.
 
-**Version**: 1.4.0 | **Ratified**: 2026-07-04 | **Last Amended**: 2026-07-04
+**Version**: 2.0.0 | **Ratified**: 2026-07-04 | **Last Amended**: 2026-07-04
