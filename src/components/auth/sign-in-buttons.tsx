@@ -21,7 +21,7 @@ export function SignInButtons() {
       <button
         type="button"
         onClick={() => signIn("github", { callbackUrl: pathname })}
-        className="rounded-card border border-gray-300 bg-white px-6 py-3 font-medium text-gray-900 hover:border-brand-500"
+        className="rounded-card border border-gray-300 bg-white px-6 py-3 font-medium text-gray-900 hover:border-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
       >
         Continue with GitHub
       </button>

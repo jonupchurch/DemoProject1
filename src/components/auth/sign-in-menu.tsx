@@ -43,7 +43,7 @@ export function SignInMenu() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 z-10 mt-2 w-64 rounded-card border border-gray-300 bg-white p-3 shadow-lg">
+        <div className="absolute right-0 z-10 mt-2 w-64 rounded-card border border-gray-300 bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-800">
           <SignInButtons />
         </div>
       )}

@@ -14,9 +14,9 @@ function BucketTable({
 }) {
   return (
     <table className="w-full border-collapse text-sm">
-      <caption className="mb-2 text-left font-medium text-gray-900">{caption}</caption>
+      <caption className="mb-2 text-left font-medium text-gray-900 dark:text-gray-100">{caption}</caption>
       <thead>
-        <tr className="border-b border-gray-300 text-left text-gray-600">
+        <tr className="border-b border-gray-300 text-left text-gray-600 dark:border-gray-700 dark:text-gray-400">
           <th scope="col" className="py-2 pr-4 font-medium">
             {labelHeader}
           </th>
@@ -30,7 +30,7 @@ function BucketTable({
       </thead>
       <tbody>
         {rows.map((row) => (
-          <tr key={row.label} className="border-b border-gray-200">
+          <tr key={row.label} className="border-b border-gray-200 dark:border-gray-800">
             <td className="py-2 pr-4">{row.label}</td>
             <td className="py-2 pr-4">{Math.round(row.accuracyRate * 100)}%</td>
             <td className="py-2">{row.count}</td>

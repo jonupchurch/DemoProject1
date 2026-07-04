@@ -88,7 +88,7 @@ export function DecisionForm({ mode = "create", decisionId, initialValues }: Dec
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="rounded-card border border-gray-300 px-3 py-2"
+          className="rounded-card border border-gray-300 px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
           aria-invalid={Boolean(errors.title)}
           aria-describedby={errors.title ? "title-error" : undefined}
         />
@@ -104,7 +104,7 @@ export function DecisionForm({ mode = "create", decisionId, initialValues }: Dec
         {errors.options && <p className="text-sm text-verdict-wrong">{errors.options}</p>}
 
         {options.map((option, index) => (
-          <div key={index} className="flex flex-col gap-2 rounded-card border border-gray-300 p-4">
+          <div key={index} className="flex flex-col gap-2 rounded-card border border-gray-300 p-4 dark:border-gray-700">
             <div className="flex items-end gap-2">
               <div className="flex flex-1 flex-col gap-1">
                 <label htmlFor={`option-name-${index}`} className="text-sm font-medium">
@@ -115,7 +115,7 @@ export function DecisionForm({ mode = "create", decisionId, initialValues }: Dec
                   type="text"
                   value={option.name}
                   onChange={(e) => updateOption(index, { name: e.target.value })}
-                  className="rounded-card border border-gray-300 px-3 py-2"
+                  className="rounded-card border border-gray-300 px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
                   aria-invalid={Boolean(errors[`options.${index}.name`])}
                 />
               </div>
@@ -142,7 +142,7 @@ export function DecisionForm({ mode = "create", decisionId, initialValues }: Dec
                 id={`option-pros-${index}`}
                 value={option.pros}
                 onChange={(e) => updateOption(index, { pros: e.target.value })}
-                className="rounded-card border border-gray-300 px-3 py-2"
+                className="rounded-card border border-gray-300 px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
               />
             </div>
 
@@ -154,7 +154,7 @@ export function DecisionForm({ mode = "create", decisionId, initialValues }: Dec
                 id={`option-cons-${index}`}
                 value={option.cons}
                 onChange={(e) => updateOption(index, { cons: e.target.value })}
-                className="rounded-card border border-gray-300 px-3 py-2"
+                className="rounded-card border border-gray-300 px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
               />
             </div>
           </div>
@@ -178,7 +178,7 @@ export function DecisionForm({ mode = "create", decisionId, initialValues }: Dec
           type="number"
           value={cost}
           onChange={(e) => setCost(e.target.value)}
-          className="rounded-card border border-gray-300 px-3 py-2"
+          className="rounded-card border border-gray-300 px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
         />
       </div>
 
@@ -190,7 +190,7 @@ export function DecisionForm({ mode = "create", decisionId, initialValues }: Dec
           id="risks"
           value={risks}
           onChange={(e) => setRisks(e.target.value)}
-          className="rounded-card border border-gray-300 px-3 py-2"
+          className="rounded-card border border-gray-300 px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
         />
       </div>
 
@@ -202,7 +202,7 @@ export function DecisionForm({ mode = "create", decisionId, initialValues }: Dec
           id="notes"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          className="rounded-card border border-gray-300 px-3 py-2"
+          className="rounded-card border border-gray-300 px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
         />
       </div>
 
@@ -230,7 +230,7 @@ export function DecisionForm({ mode = "create", decisionId, initialValues }: Dec
           id="category"
           value={category}
           onChange={(e) => setCategory(e.target.value as CreateDecisionInput["category"])}
-          className="rounded-card border border-gray-300 px-3 py-2"
+          className="rounded-card border border-gray-300 px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
         >
           {CATEGORIES.map((c) => (
             <option key={c} value={c}>
@@ -249,7 +249,7 @@ export function DecisionForm({ mode = "create", decisionId, initialValues }: Dec
           type="date"
           value={reviewDate}
           onChange={(e) => setReviewDate(e.target.value)}
-          className="rounded-card border border-gray-300 px-3 py-2"
+          className="rounded-card border border-gray-300 px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
           aria-invalid={Boolean(errors.reviewDate)}
         />
         {errors.reviewDate && <p className="text-sm text-verdict-wrong">{errors.reviewDate}</p>}

@@ -7,7 +7,7 @@ import { CalibrationChartLazy } from "@/components/dashboard/calibration-chart-l
 export function CalibrationDashboard({ byBand, byCategory }: CalibrationSummary) {
   if (byBand.length === 0 && byCategory.length === 0) {
     return (
-      <p className="text-gray-600">
+      <p className="text-gray-600 dark:text-gray-400">
         Once you resolve a decision — recording whether it turned out Right, Wrong, or Mixed —
         your calibration will appear here, broken down by confidence level and category.
       </p>

@@ -1,6 +1,16 @@
 @import "tailwindcss";
 
 /*
+  Class-based dark mode (constitution Principle VI) — a manual toggle
+  (theme-toggle.tsx) needs to override the OS preference, which Tailwind's
+  default `dark:` (media-query-based) can't do. `<html>` gets a `.dark` class
+  set by a blocking inline script in layout.tsx (before first paint, to avoid
+  a flash of the wrong theme) that reads a stored choice or falls back to
+  prefers-color-scheme, and toggled live by theme-toggle.tsx thereafter.
+*/
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
   Shared design tokens (constitution Principle VI: one consistent design
   system rather than ad hoc per-page styling). Extends Tailwind's default
   scale with the semantic colors this app's status/verdict states need;
@@ -32,4 +42,30 @@
   --color-verdict-mixed-bg: #fef3c7;
 
   --radius-card: 0.75rem;
+
+  /*
+    Recharts renders raw SVG, which Tailwind's `dark:` variant can't reach
+    (it only rewrites class names, not SVG presentation attributes) — these
+    two are read directly as `stroke`/`fill` values in calibration-chart.tsx
+    instead, so the dark-mode override below reaches them the same way it
+    reaches --color-brand-600.
+  */
+  --color-chart-grid: #e5e7eb;
+  --color-chart-bar: #1d4ed8;
+}
+
+/*
+  Only --color-brand-600 needs a dark-specific value here — it's the one
+  custom token ever used as standalone text against the page's own background
+  (nav/link active-state color); brand-500/700 and every status/verdict token
+  are always used as a self-contained text+background pair (e.g. a status
+  badge), so their internal contrast already holds regardless of the
+  surrounding page theme and doesn't need overriding. Generic backgrounds/
+  text/borders (bg-white, text-gray-900, etc.) use Tailwind's built-in `dark:`
+  variant per element instead of a token here.
+*/
+:root.dark {
+  --color-brand-600: #60a5fa;
+  --color-chart-grid: #374151;
+  --color-chart-bar: #60a5fa;
 }

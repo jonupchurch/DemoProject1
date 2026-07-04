@@ -59,23 +59,23 @@ export function ResolutionPanel({
           Edit resolution
         </button>
       </div>
-      <div className="flex flex-col gap-2 rounded-card border border-gray-300 p-4">
+      <div className="flex flex-col gap-2 rounded-card border border-gray-300 p-4 dark:border-gray-700">
         <span
           className={`self-start rounded-card px-2 py-1 text-sm ${VERDICT_STYLES[resolution.verdict]}`}
         >
           {resolution.verdict}
         </span>
         <p className="text-sm">
-          <span className="text-gray-500">Satisfaction: </span>
+          <span className="text-gray-500 dark:text-gray-400">Satisfaction: </span>
           {resolution.satisfaction} / 5
         </p>
         {resolution.learnings && (
           <p className="text-sm">
-            <span className="text-gray-500">Learnings: </span>
+            <span className="text-gray-500 dark:text-gray-400">Learnings: </span>
             {resolution.learnings}
           </p>
         )}
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-gray-500 dark:text-gray-400">
           Resolved {formatDateOnly(resolution.resolvedAt)}
         </p>
       </div>

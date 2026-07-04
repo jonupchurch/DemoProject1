@@ -41,12 +41,12 @@ export function UserMenu({ image, name }: UserMenuProps) {
         aria-label={name ? `Account menu for ${name}` : "Account menu"}
         aria-haspopup="true"
         aria-expanded={isOpen}
-        className="block h-9 w-9 overflow-hidden rounded-full border border-gray-300 bg-gray-100"
+        className="block h-9 w-9 overflow-hidden rounded-full border border-gray-300 bg-gray-100 dark:border-gray-700 dark:bg-gray-800"
       >
         {image ? (
           <Image src={image} alt="" width={36} height={36} className="h-full w-full object-cover" />
         ) : (
-          <span className="flex h-full w-full items-center justify-center text-sm font-medium text-gray-600">
+          <span className="flex h-full w-full items-center justify-center text-sm font-medium text-gray-600 dark:text-gray-400">
             {name?.trim()?.[0]?.toUpperCase() ?? "?"}
           </span>
         )}
@@ -58,7 +58,7 @@ export function UserMenu({ image, name }: UserMenuProps) {
         // label + one button) doesn't implement (axe: aria-required-children,
         // found via real session testing — this popover's open state was
         // never automatable before cookie-based test auth existed).
-        <div className="absolute right-0 z-10 mt-2 w-64 rounded-card border border-gray-300 bg-white p-3 shadow-lg">
+        <div className="absolute right-0 z-10 mt-2 w-64 rounded-card border border-gray-300 bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-800">
           {name && <p className="mb-3 truncate text-sm font-medium">{name}</p>}
           <SignOutButton />
         </div>

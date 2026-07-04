@@ -47,7 +47,7 @@ export function DecisionFilterControls() {
     searchParams.getAll("verdict").length > 0;
 
   return (
-    <div className="mb-6 flex flex-wrap gap-6 rounded-card border border-gray-300 p-4">
+    <div className="mb-6 flex flex-wrap gap-6 rounded-card border border-gray-300 p-4 dark:border-gray-700">
       {FIELDS.map(({ key, legend, options }) => {
         const active = searchParams.getAll(key);
         return (

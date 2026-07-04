@@ -34,20 +34,20 @@ export default async function DecisionDetailPage({
 
       <dl className="mb-6 grid grid-cols-2 gap-4 text-sm">
         <div>
-          <dt className="text-gray-500">Category</dt>
+          <dt className="text-gray-500 dark:text-gray-400">Category</dt>
           <dd>{decision.category}</dd>
         </div>
         <div>
-          <dt className="text-gray-500">Confidence</dt>
+          <dt className="text-gray-500 dark:text-gray-400">Confidence</dt>
           <dd>{decision.confidence}%</dd>
         </div>
         <div>
-          <dt className="text-gray-500">Review date</dt>
+          <dt className="text-gray-500 dark:text-gray-400">Review date</dt>
           <dd>{formatDateOnly(decision.reviewDate)}</dd>
         </div>
         {decision.cost != null && (
           <div>
-            <dt className="text-gray-500">Estimated cost</dt>
+            <dt className="text-gray-500 dark:text-gray-400">Estimated cost</dt>
             <dd>{decision.cost.toString()}</dd>
           </div>
         )}
@@ -56,17 +56,17 @@ export default async function DecisionDetailPage({
       <h2 className="mb-3 text-lg font-semibold">Options considered</h2>
       <ul className="mb-6 flex flex-col gap-3">
         {decision.options.map((option) => (
-          <li key={option.id} className="rounded-card border border-gray-300 p-4">
+          <li key={option.id} className="rounded-card border border-gray-300 p-4 dark:border-gray-700">
             <p className="font-medium">{option.name}</p>
             {option.pros && (
               <p className="mt-1 text-sm">
-                <span className="text-gray-500">Pros: </span>
+                <span className="text-gray-500 dark:text-gray-400">Pros: </span>
                 {option.pros}
               </p>
             )}
             {option.cons && (
               <p className="mt-1 text-sm">
-                <span className="text-gray-500">Cons: </span>
+                <span className="text-gray-500 dark:text-gray-400">Cons: </span>
                 {option.cons}
               </p>
             )}
@@ -89,14 +89,14 @@ export default async function DecisionDetailPage({
       )}
 
       {decision.status === "Resolved" && (
-        <p className="mb-4 text-xs text-gray-500">
+        <p className="mb-4 text-xs text-gray-500 dark:text-gray-400">
           This decision has been resolved — the entry above is locked.
         </p>
       )}
 
       <ResolutionPanel decisionId={decision.id} resolution={decision.resolution} />
 
-      <div className="mt-8 flex items-center gap-4 border-t border-gray-200 pt-4">
+      <div className="mt-8 flex items-center gap-4 border-t border-gray-200 pt-4 dark:border-gray-800">
         {decision.status === "Pending" && (
           <Link
             href={`/decisions/${decision.id}/edit`}

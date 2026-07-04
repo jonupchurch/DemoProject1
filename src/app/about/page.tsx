@@ -9,7 +9,7 @@ export default function AboutPage() {
 
       <section className="mb-8">
         <h2 className="mb-2 text-lg font-semibold">Who built this</h2>
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-gray-400">
           {/* TODO: replace with your real bio */}
           Hi, I&apos;m Jon Upchurch. This project is part of my work learning spec-driven
           development — planning a project in detail before writing code, then building it
@@ -19,7 +19,7 @@ export default function AboutPage() {
 
       <section className="mb-8">
         <h2 className="mb-2 text-lg font-semibold">Why Decision Journal</h2>
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-gray-400">
           {/* TODO: replace with your real motivation/background */}
           Everyone makes decisions, but almost nobody tracks whether their instincts were actually
           right afterward. This app is a small, personal tool for closing that loop.
@@ -28,7 +28,7 @@ export default function AboutPage() {
 
       <section>
         <h2 className="mb-2 text-lg font-semibold">Get in touch</h2>
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-gray-400">
           {/* TODO: add real links (LinkedIn, personal site, etc.) */}
           <a
             href="https://github.com/jonupchurch"

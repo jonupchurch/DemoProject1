@@ -153,7 +153,7 @@ export function AppShowcaseCarousel({ apps }: { apps: AppShowcaseSlide[] }) {
               <span
                 aria-hidden="true"
                 className={`h-2 w-2 rounded-full ${
-                  index === selectedIndex ? "bg-brand-600" : "bg-gray-300"
+                  index === selectedIndex ? "bg-brand-600" : "bg-gray-300 dark:bg-gray-600"
                 }`}
               />
             </button>
@@ -168,9 +168,9 @@ export function AppShowcaseCarousel({ apps }: { apps: AppShowcaseSlide[] }) {
         aria-live="polite"
       >
         {displayedApp.features.map((feature) => (
-          <div key={feature.title} className="rounded-card border border-gray-200 p-6">
+          <div key={feature.title} className="rounded-card border border-gray-200 p-6 dark:border-gray-800">
             <h2 className="mb-2 font-semibold">{feature.title}</h2>
-            <p className="text-sm text-gray-600">{feature.body}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{feature.body}</p>
           </div>
         ))}
       </div>

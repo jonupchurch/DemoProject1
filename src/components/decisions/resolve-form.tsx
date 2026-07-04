@@ -56,7 +56,7 @@ export function ResolveForm({ decisionId, mode, initialValues, onDone }: Resolve
           id="verdict"
           value={verdict}
           onChange={(e) => setVerdict(e.target.value as ResolveInput["verdict"])}
-          className="rounded-card border border-gray-300 px-3 py-2"
+          className="rounded-card border border-gray-300 px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
         >
           {VERDICTS.map((v) => (
             <option key={v} value={v}>
@@ -92,7 +92,7 @@ export function ResolveForm({ decisionId, mode, initialValues, onDone }: Resolve
           id="learnings"
           value={learnings}
           onChange={(e) => setLearnings(e.target.value)}
-          className="rounded-card border border-gray-300 px-3 py-2"
+          className="rounded-card border border-gray-300 px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
         />
       </div>
 

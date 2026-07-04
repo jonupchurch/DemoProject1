@@ -78,7 +78,7 @@ export default async function Home() {
     <main className="mx-auto max-w-5xl px-4 py-16">
       <AppShowcaseCarousel apps={apps} />
 
-      <section className="mt-20 border-t border-gray-200 pt-8 text-center text-sm text-gray-500">
+      <section className="mt-20 border-t border-gray-200 pt-8 text-center text-sm text-gray-500 dark:border-gray-800 dark:text-gray-400">
         <p>
           Built as a spec-driven-development portfolio project.{" "}
           <a

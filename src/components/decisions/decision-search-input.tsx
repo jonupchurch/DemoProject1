@@ -44,7 +44,7 @@ export function DecisionSearchInput() {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Search title, risks, notes, learnings..."
-        className="rounded-card border border-gray-300 px-3 py-2 sm:max-w-sm"
+        className="rounded-card border border-gray-300 px-3 py-2 sm:max-w-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
       />
     </div>
   );

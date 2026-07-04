@@ -42,7 +42,7 @@ export default async function TimelinePage({
       )}
 
       {totalCount === 0 ? (
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-gray-400">
           You haven&apos;t logged any decisions yet.{" "}
           <Link href="/decisions/new" className="text-brand-600 underline">
             Log your first decision
@@ -50,7 +50,7 @@ export default async function TimelinePage({
           to get started.
         </p>
       ) : timeline.length === 0 ? (
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-gray-400">
           No decisions match your current filters or search.
         </p>
       ) : (
@@ -59,7 +59,7 @@ export default async function TimelinePage({
             <li key={decision.id}>
               <Link
                 href={`/decisions/${decision.id}`}
-                className="block rounded-card border border-gray-300 p-4 hover:border-brand-500"
+                className="block rounded-card border border-gray-300 p-4 hover:border-brand-500 dark:border-gray-700"
               >
                 <div className="flex items-center justify-between">
                   <span className="font-medium">{decision.title}</span>
@@ -73,7 +73,7 @@ export default async function TimelinePage({
                     {decision.status}
                   </span>
                 </div>
-                <div className="mt-1 flex items-center gap-2 text-sm text-gray-600">
+                <div className="mt-1 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                   <span>
                     {decision.status === "Resolved" && decision.resolution
                       ? `Resolved ${formatDateOnly(decision.resolution.resolvedAt)}`

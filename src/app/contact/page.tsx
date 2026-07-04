@@ -15,7 +15,7 @@ export default async function ContactPage() {
   return (
     <main className="mx-auto max-w-2xl px-4 py-16">
       <h1 className="mb-6 text-3xl font-bold text-brand-600">Contact</h1>
-      <p className="text-gray-600">
+      <p className="text-gray-600 dark:text-gray-400">
         {/* TODO: build out the actual contact/CRM tool this page is a placeholder for */}
         Placeholder page — coming soon.
       </p>
