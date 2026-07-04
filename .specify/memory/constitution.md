@@ -1,22 +1,40 @@
 <!--
 Sync Impact Report
 ==================
-Version change: 1.2.0 → 1.3.0
+Version change: 1.3.0 → 1.4.0
 Modified principles:
-  - VII. Performance & Quality Bar (Lighthouse): mandatory 95+ threshold narrowed from all four
-    categories to just Performance and Accessibility; Best Practices and SEO no longer mandatory
-Added sections: none
+  - II. Extensive Test Coverage: rationale's phase count de-hardcoded ("five phases" → "several
+    phases") since Development Workflow now has six
+Added sections:
+  - Purpose (new, precedes Core Principles): reframes the project as a multi-app personal
+    portfolio site; Decision Journal is the first of several planned mini-apps
+  - Technology Constraints → "Multi-App Structure" paragraph: routing/layout rules for future
+    mini-apps (flat top-level routes, shared app-shell layout distinct from the showcase nav)
 Removed sections: none
+Development Workflow: added Phase 6 (Design & Layout — site-wide design system refinement and
+  multi-app scaffolding), scheduled after phases 1-5 (Decision Journal's full build-out)
 Templates requiring updates:
   - .specify/templates/plan-template.md   ✅ no changes needed (Constitution Check gate is generic, derives from this file at plan time)
   - .specify/templates/spec-template.md   ✅ no changes needed (no hardcoded principle references)
   - .specify/templates/tasks-template.md  ✅ no changes needed (no hardcoded principle references)
   - .claude/skills/speckit-*/SKILL.md     ✅ no changes needed (framework-provided, no embedded project principle text)
   - README.md / docs/quickstart.md        n/a (do not exist yet)
-Follow-up TODOs: none
+Follow-up TODOs:
+  - When Phase 6 is actually reached, /speckit-specify MUST enumerate which mini-app(s) beyond
+    Decision Journal (if any yet exist) are in scope for that pass — none are named here by design.
 -->
 
-# Decision Journal Constitution
+# Jon Upchurch Showcase Constitution
+
+## Purpose
+
+This repository hosts a personal portfolio site, not a single-purpose application. Its job is to
+showcase a small collection of independent mini-apps, each demonstrating a different skill;
+Decision Journal is the first of these built out fully. Additional mini-apps will be added over
+time and are deliberately not enumerated here — each one gets its own `/speckit-specify` →
+`/speckit-plan` → `/speckit-tasks` → `/speckit-implement` cycle when its turn actually comes.
+Every principle, constraint, and workflow rule below governs the site as a whole and every
+mini-app hosted on it, not Decision Journal alone, unless a rule says otherwise.
 
 ## Core Principles
 
@@ -49,7 +67,7 @@ exempted from unit tests.
 
 **Rationale**: The product's entire value proposition rests on the
 calibration numbers being trustworthy, and it's being built incrementally
-across five phases where regressions in earlier phases are easy to miss.
+across several phases where regressions in earlier phases are easy to miss.
 Extensive unit and integration coverage catches those regressions early;
 full browser-level e2e tests add real confidence but are the slowest and
 most expensive to maintain, so they're encouraged rather than mandated.
@@ -149,6 +167,14 @@ component MUST only be marked as a Client Component (`"use client"`) when
 it requires interactivity, browser-only APIs, or client-side state that
 cannot reasonably be achieved on the server.
 
+**Multi-App Structure**: Each mini-app on this site lives at its own flat, top-level route (for
+example `/decisions`) and is added to the shared navigation as it ships; there is no `/apps/*`
+namespace and no separate hub page required to reach it. The top-level showcase chrome — site
+branding plus Home/About/[app] navigation — is shared across the whole site. Mini-apps MAY also
+share a common internal "app shell" layout (consistent page chrome/utilities reused across apps)
+rather than each inventing bespoke chrome from scratch, but each app's own pages, routes, and
+business logic are otherwise independent of every other app's.
+
 ## Development Workflow
 
 Features MUST be delivered in the following order, each one taken through
@@ -161,6 +187,9 @@ before the next phase begins:
 4. Filtering, search, and timeline polish
 5. AI assistance — per-decision summaries first, cross-decision pattern
    insights afterward
+6. Design & Layout — site-wide design system refinement and multi-app
+   scaffolding, carried out once Decision Journal's own feature set
+   (phases 1-5) is complete
 
 A later phase MUST NOT begin implementation before the prior phase's spec
 is implemented and reasonably functional, since each phase depends on data
@@ -187,4 +216,4 @@ materially expanded guidance; PATCH for clarifications and wording fixes.
 Constitution Check confirming the plan does not violate any NON-NEGOTIABLE
 principle (II, III, or IV) before `/speckit-tasks` is run.
 
-**Version**: 1.3.0 | **Ratified**: 2026-07-04 | **Last Amended**: 2026-07-04
+**Version**: 1.4.0 | **Ratified**: 2026-07-04 | **Last Amended**: 2026-07-04
