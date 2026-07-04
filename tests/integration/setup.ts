@@ -1,6 +1,8 @@
+import { rm } from "node:fs/promises";
 import { vi, type Mock } from "vitest";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
+import { LOCAL_PHOTO_STORAGE_DIR } from "@/lib/photo-storage/local";
 
 // `auth` is overloaded (bare session-fetch vs. middleware-wrapping); the
 // mock only ever needs to behave as the former here.
@@ -29,4 +31,15 @@ export function mockSessionAs(userId: string | null) {
 /** Clears decisions (and cascaded options/resolutions) between tests. */
 export async function resetDecisions() {
   await prisma.decision.deleteMany();
+}
+
+/**
+ * Clears pins (and cascaded photos) between tests, and the local-filesystem
+ * PhotoStorage driver's on-disk files those photos pointed at — otherwise
+ * repeated test runs would keep accumulating orphaned files under
+ * `.data/photo-storage/` (gitignored, but not otherwise cleaned up).
+ */
+export async function resetPins() {
+  await prisma.pin.deleteMany();
+  await rm(LOCAL_PHOTO_STORAGE_DIR, { recursive: true, force: true });
 }

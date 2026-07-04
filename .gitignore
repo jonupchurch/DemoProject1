@@ -32,5 +32,8 @@ next-env.d.ts
 # vercel
 .vercel
 
+# local-filesystem PhotoStorage driver (dev/test only — research.md §2)
+/.data/
+
 # claude code local settings
 .claude/settings.local.json

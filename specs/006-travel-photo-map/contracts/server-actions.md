@@ -9,25 +9,28 @@ Every mutating action reads the current session's user id itself (via the existi
 from the client, so a caller cannot claim ownership of someone else's pin by passing a different id
 (constitution Principle VIII).
 
+**Photos are uploaded before either Server Action runs** (research.md §5, added during
+implementation) — `createPin`/`addPhotoToPin` never receive a raw `File`, only an already-uploaded
+`UploadedPhoto` reference (`{ url, contentType }`). See "Upload routes" below for how a `File`
+becomes one of these. This is what keeps a multi-photo gallery from ever exceeding Vercel's hard
+4.5MB serverless-function request-body cap — the bytes never pass through a Server Action at all.
+
 ## `createPin(input: CreatePinInput): Promise<PinWithPhotos>`
 
 ```text
 CreatePinInput = {
-  latitude: number    // -90 to 90 (FR-004)
-  longitude: number   // -180 to 180 (FR-004)
+  latitude: number         // -90 to 90 (FR-004)
+  longitude: number        // -180 to 180 (FR-004)
   caption?: string
-  photos: File[]      // length >= 1 (FR-001, FR-010)
+  photos: UploadedPhoto[]  // length >= 1 (FR-001, FR-010); { url, contentType } — already uploaded
 }
 ```
 
 - Requires an authenticated session; rejects otherwise (FR-002).
 - Rejects with a field-level validation error if `latitude`/`longitude` are missing/out of range,
   or `photos` is empty (FR-001, FR-004).
-- Rejects if any file in `photos` isn't an accepted image type or exceeds the size limit (FR-013,
-  research.md §3) — no partial pin is created if any photo fails validation.
-- On success: uploads each valid photo via `PhotoStorage.put()` (research.md §2), persists a `Pin`
-  owned by the current session's user together with its `Photo` rows, and returns it with photos
-  attached in upload order.
+- On success: persists a `Pin` owned by the current session's user together with its `Photo` rows
+  (referencing the already-uploaded URLs), and returns it with photos attached in upload order.
 
 ## `updatePinDetails(id: string, input: UpdatePinDetailsInput): Promise<Pin>`
 
@@ -42,13 +45,24 @@ UpdatePinDetailsInput = {
 - Rejects unless the current session's user owns the target `Pin` (FR-009, FR-011, NON-NEGOTIABLE).
 - Updates only location/caption — does not touch the photo gallery (see below).
 
-## `addPhotoToPin(pinId: string, photo: File): Promise<Photo>`
+## `addPhotoToPin(pinId: string, photo: UploadedPhoto): Promise<Photo>`
 
 - Rejects unless the current session's user owns the target `Pin`.
-- Rejects if `photo` isn't an accepted image type or exceeds the size limit (same validation as
-  `createPin`).
-- On success: uploads the file via `PhotoStorage.put()`, persists a new `Photo` row appended to the
-  end of the pin's gallery order (FR-009).
+- `photo` is already uploaded (see "Upload routes" below) — this only persists the `Photo` row.
+- On success: persists a new `Photo` row appended to the end of the pin's gallery order (FR-009).
+
+## Upload routes (not Server Actions — where a `File` actually becomes an `UploadedPhoto`)
+
+- **Production** — `POST /api/travel-photos/upload-token`: issues a short-lived Vercel Blob client
+  token (rejecting if unauthenticated), consumed by `@vercel/blob/client`'s `upload()` running in
+  the browser. The file's bytes go straight from the browser to Blob storage; this route never
+  receives them.
+- **Dev/test** — `POST /api/travel-photos/upload-local`: a same-origin Route Handler (rejecting if
+  unauthenticated) that validates the file (type/size, research.md §3) and writes it via the
+  local-filesystem `PhotoStorage` driver, returning `{ url, contentType }`.
+- Both are wrapped by the client helper `uploadPhotoFile(file): Promise<UploadedPhoto>`
+  (`src/lib/upload-photo.ts`), which picks the right one by environment — UI code never calls
+  either route directly.
 
 ## `removePhotoFromPin(photoId: string): Promise<void>`
 

@@ -92,4 +92,41 @@ describe("NavLinks", () => {
     fireEvent.mouseDown(document.body);
     expect(screen.queryByRole("menu")).not.toBeInTheDocument();
   });
+
+  it("shows the Travel flyout trigger even when signed out (public, FR-005)", () => {
+    vi.mocked(usePathname).mockReturnValue("/");
+    render(<NavLinks isSignedIn={false} />);
+    expect(screen.getByRole("button", { name: "Travel" })).toBeInTheDocument();
+  });
+
+  it("shows Map and List, but not Add a Pin, in the Travel flyout when signed out", () => {
+    vi.mocked(usePathname).mockReturnValue("/travel");
+    render(<NavLinks isSignedIn={false} />);
+    fireEvent.click(screen.getByRole("button", { name: "Travel" }));
+    expect(screen.getByRole("menuitem", { name: "Map" })).toBeInTheDocument();
+    expect(screen.getByRole("menuitem", { name: "List" })).toBeInTheDocument();
+    expect(screen.queryByRole("menuitem", { name: "Add a Pin" })).not.toBeInTheDocument();
+  });
+
+  it("adds Add a Pin to the Travel flyout when signed in, alongside Map and List", () => {
+    vi.mocked(usePathname).mockReturnValue("/travel");
+    render(<NavLinks isSignedIn={true} />);
+    fireEvent.click(screen.getByRole("button", { name: "Travel" }));
+    expect(screen.getByRole("menuitem", { name: "Map" })).toBeInTheDocument();
+    expect(screen.getByRole("menuitem", { name: "List" })).toBeInTheDocument();
+    expect(screen.getByRole("menuitem", { name: "Add a Pin" })).toBeInTheDocument();
+  });
+
+  it("opens and closes the Travel flyout independently of the Decisions flyout", () => {
+    vi.mocked(usePathname).mockReturnValue("/decisions");
+    render(<NavLinks isSignedIn={true} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Decisions" }));
+    expect(screen.getByRole("menu", { name: "Decisions" })).toBeInTheDocument();
+    expect(screen.queryByRole("menu", { name: "Travel" })).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Travel" }));
+    expect(screen.getByRole("menu", { name: "Decisions" })).toBeInTheDocument();
+    expect(screen.getByRole("menu", { name: "Travel" })).toBeInTheDocument();
+  });
 });

@@ -93,13 +93,27 @@ high-concurrency or CDN-scale image-serving design is needed beyond what Vercel 
   server-rendered, semantic-HTML list view of every pin (research.md §4) rather than attempting to
   retrofit accessibility onto the map widget itself.
 - **V. Transparent AI Assistance** — N/A. No AI-generated content anywhere in this feature.
-- **VI. Clean, Elegant Design** — PASS. Reuses the site's existing shared design tokens, dark-mode
-  support, and motion vocabulary (this amendment) rather than inventing travel-app-specific styling;
-  MapLibre's built-in smooth pan/zoom/fly-to motion is tuned to match the durations/easings already
-  used by the existing carousel/popover transitions where the two can reasonably align.
-- **VII. Performance & Quality Bar (Lighthouse)** — Target: 95+ Performance/Accessibility on a
-  production build, to be measured once implemented (same bar and same measurement approach as every
-  prior phase). The map's markers and each pin's gallery use `next/image` with responsive sizing and
+- **VI. Clean, Elegant Design** — PASS, including dark mode, implemented site-wide during this
+  feature's polish (tasks.md T035) rather than left as a gap. Auditing the codebase during polish
+  found **no dark-mode implementation anywhere on this site at all** — a pre-existing, site-wide
+  gap this feature didn't cause but was the first to actually need. Raised directly with the
+  project owner (implement now vs. defer as separate work) rather than silently marked done or
+  silently expanded in scope; the project owner chose to implement it now. See research.md §8 for
+  the approach (CSS custom-property overrides for the few tokens used as standalone text, plus
+  Tailwind's `dark:` variant per element for everything else) and its site-wide reach (every
+  existing Decision Journal page, not just Travel). MapLibre's built-in smooth pan/zoom/fly-to
+  camera motion fits the existing motion vocabulary the carousel/popovers already use; the map's
+  own tiles/imagery don't re-theme with the page (research.md §8 notes this as an accepted,
+  minor, out-of-scope limitation — most map-based products keep one map style regardless of the
+  surrounding page theme).
+- **VII. Performance & Quality Bar (Lighthouse)** — **Measured** against a production build:
+  `/travel/list` 82/100 and `/travel/[id]` 87/100 Performance (both within the 78-91 range phases
+  1-4 already established), `/travel` (the live interactive map) 69/100 Performance — below that
+  range and below the 95+ target. Accessibility measured 100/100 on all three. The gap is
+  attributable to genuine main-thread cost from a real WebGL map (research.md §7 has the full
+  breakdown and the measurement-environment caveat this shares with phase 1's own documented
+  exception), not a general regression — the two non-map pages land squarely in the established
+  range. The map's markers and each pin's gallery use `next/image` with responsive sizing and
   lazy-loading below the fold, per this amendment's explicit image-heavy-view clause.
 - **VIII. Upload Ownership & Integrity (NON-NEGOTIABLE)** — PASS. Every mutating Server Action
   requires an authenticated session and re-verifies server-side that the caller owns the target
@@ -114,7 +128,11 @@ high-concurrency or CDN-scale image-serving design is needed beyond what Vercel 
   (research.md §1) — no precision/fuzzing control, per the principle's own text.
 
 No unresolved violations against any NON-NEGOTIABLE principle (II, III, IV, VIII, IX) — III is N/A
-as explained above, not violated. Complexity Tracking below documents the two new dependencies this
+as explained above, not violated. VI now passes with dark mode implemented site-wide (research.md
+§8); VII (neither NON-NEGOTIABLE, so it doesn't block this gate) has a documented, measured gap —
+a Performance score specific to the one page doing real WebGL work, not a general regression —
+recorded above rather than asserted as a clean pass. Complexity Tracking below documents the two
+new dependencies this
 feature adds; neither is a principle violation, but both are recorded for the same reason phase 5
 recorded `embla-carousel-react` — a new dependency is a real, consultatively-made cost worth a
 paper trail even when it doesn't breach a principle.
@@ -142,6 +160,14 @@ prisma/
 
 src/
 ├── app/
+│   ├── api/
+│   │   └── travel-photos/
+│   │       ├── [filename]/
+│   │       │   └── route.ts     # GET — serves local-filesystem-driver photos in dev/test
+│   │       ├── upload-local/
+│   │       │   └── route.ts     # POST — dev/test upload path (research.md §5)
+│   │       └── upload-token/
+│   │           └── route.ts     # POST — production Vercel Blob client-token issuance (research.md §5)
 │   └── travel/
 │       ├── page.tsx             # public map view (Server Component shell; map itself is a
 │       │                        # dynamically-imported Client Component island)
@@ -156,21 +182,30 @@ src/
 │               └── page.tsx     # owner-only: edit caption/location, add/remove photos, delete
 ├── actions/
 │   └── travel.ts                # Server Actions: createPin, updatePinDetails, addPhotoToPin,
-│                                 # removePhotoFromPin, deletePin
+│                                 # removePhotoFromPin, deletePin — receive UploadedPhoto refs only,
+│                                 # never raw files (research.md §5)
 ├── lib/
 │   ├── travel.ts                 # data-access + validation (listPins, getPin,
 │   │                              # isPinOwnedByCurrentUser); mirrors lib/decisions.ts's shape
+│   ├── travel-types.ts            # client-safe types: CreatePinInput, UploadedPhoto, etc.
+│   ├── upload-photo.ts            # client helper: uploads a File, returns an UploadedPhoto
+│   │                               # (Vercel Blob client-token in production, upload-local route
+│   │                               # in dev/test — research.md §5)
 │   └── photo-storage/
 │       ├── index.ts               # PhotoStorage interface + environment-based driver selection
 │       ├── local.ts               # dev/test driver: Node fs/promises, gitignored data dir
-│       └── vercel-blob.ts         # production driver: @vercel/blob
+│       └── vercel-blob.ts         # production driver: @vercel/blob (delete() only in practice —
+│                                   # put() is unused once uploads go client-side, research.md §5)
 └── components/
     ├── nav/
     │   └── nav-links.tsx          # MODIFIED: adds a second, independent flyout ("Travel") next
     │                               # to the existing Decisions flyout — Map + List always visible
     │                               # (public, FR-005), "Add a Pin" shown only when signed in
     └── travel/
-        ├── travel-map.tsx         # Client Component: MapLibre map, dynamic import (ssr: false)
+        ├── travel-map.tsx         # Client Component: MapLibre map, dynamic import (ssr: false);
+        │                          # pick-a-point mode (US1) and display-markers mode (US2)
+        ├── travel-browse.tsx      # Client Component: wires TravelMap (display mode) + selected-
+        │                          # pin popup state for the public /travel page (US2)
         ├── pin-marker-popup.tsx   # marker click → photo preview + link to the pin's detail page
         ├── pin-gallery.tsx        # photo gallery display, used on the detail and edit pages
         ├── pin-form.tsx           # shared create/edit form (location picker, multi-file upload,
@@ -179,11 +214,17 @@ src/
 
 tests/
 ├── unit/
-│   └── travel.test.ts            # coordinate-range, minimum-one-photo, file type/size validation
+│   └── travel.test.ts            # coordinate-range, minimum-one-photo, validatePhotoFile
 └── integration/
-    └── travel-actions.test.ts    # Server Actions against the real test database + local-filesystem
-                                    # PhotoStorage driver, incl. cross-account ownership rejection
+    ├── travel-actions.test.ts    # Server Actions against the real test database, incl.
+    │                              # cross-account ownership rejection
+    └── travel-upload.test.ts     # /api/travel-photos/upload-local route: valid upload, rejected
+                                    # content type, auth requirement
 ```
+
+**Also modified**: `next.config.js` — `images.remotePatterns` gains Vercel Blob's public storage
+hostname; `experimental.serverActions.bodySizeLimit` raised from Next's 1MB default (still relevant
+for other Server Actions on this site, even though photo uploads no longer go through one).
 
 **Structure Decision**: Single Next.js App Router project, unchanged (constitution Technology
 Constraints). `/travel` is a flat top-level route, matching how `/decisions` is one — no `/apps/*`

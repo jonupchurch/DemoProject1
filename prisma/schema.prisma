@@ -41,6 +41,7 @@ model User {
   accounts  Account[]
   sessions  Session[]
   decisions Decision[]
+  pins      Pin[]
 }
 
 model Account {
@@ -116,6 +117,33 @@ model Option {
   sortOrder  Int
 
   @@index([decisionId])
+}
+
+model Pin {
+  id        String   @id @default(uuid())
+  ownerId   String
+  owner     User     @relation(fields: [ownerId], references: [id])
+  latitude  Float
+  longitude Float
+  caption   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  photos Photo[]
+
+  @@index([ownerId])
+}
+
+model Photo {
+  id          String   @id @default(uuid())
+  pinId       String
+  pin         Pin      @relation(fields: [pinId], references: [id], onDelete: Cascade)
+  url         String
+  contentType String
+  sortOrder   Int
+  createdAt   DateTime @default(now())
+
+  @@index([pinId])
 }
 
 model Resolution {

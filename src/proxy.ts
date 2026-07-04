@@ -19,5 +19,8 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/decisions/:path*", "/contact"],
+  // /travel, /travel/list, and /travel/[id] are deliberately NOT listed here
+  // — they're public by design (FR-005); only publishing/editing a pin
+  // requires auth.
+  matcher: ["/decisions/:path*", "/contact", "/travel/new", "/travel/:id/edit"],
 };
