@@ -31,8 +31,9 @@ environment variables or schema migrations needed for this feature.
 
 ## Phase 1: Setup (Shared Infrastructure)
 
-- [ ] T001 Add `recharts` as a dependency and a `react-is` `overrides` entry in `package.json`
-      (research.md §1 — Recharts' peer-dependency range lags React 19); run `npm install`
+- [X] T001 Add `recharts` as a dependency (`npm install recharts`) — installed cleanly at
+      `^3.9.2` against React 19.2.7 with no `react-is` override needed (research.md §1, revised
+      after verifying during implementation)
 
 ---
 
@@ -42,20 +43,21 @@ environment variables or schema migrations needed for this feature.
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T002 [P] Implement `scoreVerdict(verdict)` in `src/lib/calibration.ts` per
+- [X] T002 [P] Implement `scoreVerdict(verdict)` in `src/lib/calibration.ts` per
       contracts/dashboard-queries.md (Right→1, Wrong→0, Mixed→0.5)
-- [ ] T003 [P] Implement `bucketConfidence(confidence)` in `src/lib/calibration.ts` per
+- [X] T003 [P] Implement `bucketConfidence(confidence)` in `src/lib/calibration.ts` per
       contracts/dashboard-queries.md (fixed bands: 0-20, 21-40, 41-60, 61-80, 81-100)
-- [ ] T004 [P] Implement `listResolvedDecisionsForCalibration()` in `src/lib/decisions.ts` —
+- [X] T004 [P] Implement `listResolvedDecisionsForCalibration()` in `src/lib/decisions.ts` —
       narrow Prisma `select` (`confidence`, `category`, `resolution.verdict`,
       `resolution.satisfaction`), filtered to `status: "Resolved"` and `requireCurrentUserId()`
       (data-model.md, contracts/dashboard-queries.md)
-- [ ] T005 Create the route shell `src/app/decisions/dashboard/page.tsx` calling
+- [X] T005 Create the route shell `src/app/decisions/dashboard/page.tsx` calling
       `requireCurrentUserId()` directly (defense in depth, same CVE-2025-29927 pattern as every
       other `/decisions/*` page) — placeholder content until US1 wires real rendering (depends on
       T004)
-- [ ] T006 Add an in-app sub-nav to `src/app/decisions/layout.tsx`: "My Decisions" (`/decisions`)
-      and "Dashboard" (`/decisions/dashboard`) links, active-state aware like the existing
+- [X] T006 Add an in-app sub-nav (`src/components/decisions/decisions-subnav.tsx`) to
+      `src/app/decisions/layout.tsx`: "My Decisions" (`/decisions`) and "Dashboard"
+      (`/decisions/dashboard`) links, active-state aware like the existing
       `src/components/nav/nav-links.tsx` pattern — internal to this app, distinct from the
       site-wide showcase nav (plan.md Structure Decision)
 
@@ -75,29 +77,29 @@ count, with empty bands omitted (spec.md US1).
 
 ### Tests for User Story 1 ⚠️ (write first, confirm they fail before implementing)
 
-- [ ] T007 [P] [US1] Unit test `scoreVerdict`/`bucketConfidence` boundary cases in
+- [X] T007 [P] [US1] Unit test `scoreVerdict`/`bucketConfidence` boundary cases in
       `tests/unit/calibration.test.ts`: Right/Wrong/Mixed → 1/0/0.5; confidence values 0, 20, 21,
       40, 41, 60, 61, 80, 81, 100 each map to the correct band
-- [ ] T008 [P] [US1] Unit test `aggregateCalibration`'s `byBand` grouping in
+- [X] T008 [P] [US1] Unit test `aggregateCalibration`'s `byBand` grouping in
       `tests/unit/calibration.test.ts`: several decisions in one band produce the correct mean
       accuracy and count; a band with zero decisions is omitted (FR-006); `aggregateCalibration([])`
       returns `{ byBand: [], byCategory: [] }`
-- [ ] T009 [P] [US1] Integration test `listResolvedDecisionsForCalibration` in
+- [X] T009 [P] [US1] Integration test `listResolvedDecisionsForCalibration` in
       `tests/integration/dashboard-data.test.ts`: returns only the signed-in owner's `Resolved`
       decisions; excludes that owner's `Pending` decisions and another owner's decisions entirely
       (FR-002, FR-009)
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Implement `aggregateCalibration(decisions)`'s `byBand` grouping in
+- [X] T010 [US1] Implement `aggregateCalibration(decisions)`'s `byBand` grouping in
       `src/lib/calibration.ts` (depends on T002, T003; T007-T008 must fail first)
-- [ ] T011 [P] [US1] Build `calibration-table.tsx` in
+- [X] T011 [P] [US1] Build `calibration-table.tsx` in
       `src/components/dashboard/calibration-table.tsx` — accessible `<table>` rendering `byBand`
       rows (label, accuracy %, count)
-- [ ] T012 [P] [US1] Build `calibration-chart.tsx` in
+- [X] T012 [P] [US1] Build `calibration-chart.tsx` in
       `src/components/dashboard/calibration-chart.tsx` (`"use client"`) — Recharts `BarChart`
       rendering `byBand` rows, styled with existing Tailwind design tokens (plan.md Constraints)
-- [ ] T013 [US1] Wire `src/app/decisions/dashboard/page.tsx`: call
+- [X] T013 [US1] Wire `src/app/decisions/dashboard/page.tsx`: call
       `listResolvedDecisionsForCalibration()` → `aggregateCalibration()` → render
       `calibration-table` + `calibration-chart` with `byBand` data (depends on T005, T010, T011,
       T012)
@@ -117,19 +119,19 @@ category shows its own accuracy rate and count, with unused categories omitted (
 
 ### Tests for User Story 2 ⚠️ (write first, confirm they fail before implementing)
 
-- [ ] T014 [P] [US2] Unit test `aggregateCalibration`'s `byCategory` grouping in
+- [X] T014 [P] [US2] Unit test `aggregateCalibration`'s `byCategory` grouping in
       `tests/unit/calibration.test.ts`: several categories each produce the correct mean accuracy
       and count; a category with zero decisions is omitted (FR-006)
 
 ### Implementation for User Story 2
 
-- [ ] T015 [US2] Extend `aggregateCalibration(decisions)` in `src/lib/calibration.ts` to also
+- [X] T015 [US2] Extend `aggregateCalibration(decisions)` in `src/lib/calibration.ts` to also
       compute `byCategory`, ordered per `CATEGORIES` (`decision-types.ts`) (depends on T010; T014
       must fail first)
-- [ ] T016 [US2] Extend `calibration-table.tsx` with a second section rendering `byCategory` rows
-- [ ] T017 [US2] Extend `calibration-chart.tsx` with a second `BarChart` rendering `byCategory`
+- [X] T016 [US2] Extend `calibration-table.tsx` with a second section rendering `byCategory` rows
+- [X] T017 [US2] Extend `calibration-chart.tsx` with a second `BarChart` rendering `byCategory`
       rows
-- [ ] T018 [US2] Update `src/app/decisions/dashboard/page.tsx` to pass `byCategory` through to both
+- [X] T018 [US2] Update `src/app/decisions/dashboard/page.tsx` to pass `byCategory` through to both
       components (depends on T013, T015, T016, T017)
 
 **Checkpoint**: User Stories 1 and 2 both work together — confidence-band and category calibration
@@ -147,19 +149,22 @@ confirm a clear empty-state message appears instead of charts (spec.md US3).
 
 ### Tests for User Story 3 ⚠️ (write first, confirm they fail before implementing)
 
-- [ ] T019 [P] [US3] Component test in `tests/unit/dashboard-page.test.tsx`: given an empty
-      `CalibrationSummary` (`{ byBand: [], byCategory: [] }`), the dashboard renders the FR-008
-      empty-state message, not `calibration-table`/`calibration-chart`
-- [ ] T020 [P] [US3] Unit test in `tests/unit/calibration.test.ts`: a bucket with `count: 1` still
-      renders its count alongside the accuracy rate in `calibration-table.tsx` (regression guard
-      for FR-007 on the single-data-point case)
+- [X] T019 [P] [US3] Component test in `tests/unit/calibration-dashboard.test.tsx` (extracted the
+      empty-state branch into a new `CalibrationDashboard` presentational component rather than
+      inlining it in the page, so it's testable without mocking auth/DB): given an empty
+      `CalibrationSummary` (`{ byBand: [], byCategory: [] }`), renders the FR-008 empty-state
+      message, not `calibration-table`/`calibration-chart`; given data, renders the tables and
+      omits the message
+- [X] T020 [P] [US3] Unit test in `tests/unit/calibration-table.test.tsx`: a bucket with
+      `count: 1` still renders its count alongside the accuracy rate in `calibration-table.tsx`
+      (regression guard for FR-007 on the single-data-point case)
 
 ### Implementation for User Story 3
 
-- [ ] T021 [US3] Add the FR-008 empty-state branch and copy to
-      `src/app/decisions/dashboard/page.tsx`: when both `byBand` and `byCategory` are empty,
-      render an explanatory message instead of the table/chart (depends on T013, T018; T019 must
-      fail first)
+- [X] T021 [US3] Add `src/components/dashboard/calibration-dashboard.tsx`: the FR-008 empty-state
+      branch and copy, otherwise rendering `calibration-table` + `calibration-chart`; wire it into
+      `src/app/decisions/dashboard/page.tsx` in place of rendering those two directly (depends on
+      T013, T018; T019 must fail first)
 
 **Checkpoint**: All three user stories are independently functional — the dashboard handles rich
 data, sparse data, and no data correctly.
@@ -168,19 +173,30 @@ data, sparse data, and no data correctly.
 
 ## Final Phase: Polish & Cross-Cutting Concerns
 
-- [ ] T022 [P] Run an automated accessibility check (axe) against `/decisions/dashboard` in both
-      the empty-state and populated states; fix any violations (constitution Principle IV)
-- [ ] T023 [P] Run Lighthouse against `/decisions/dashboard` in a production build; record
+- [X] T022 [P] Run an automated accessibility check (axe) against `/decisions/dashboard` in both
+      the empty-state and populated states; fix any violations (constitution Principle IV) —
+      found and fixed 2: (1) the new in-app sub-nav's `<nav>` collided with the site-wide nav's
+      `<nav>` landmark (`landmark-unique`) — fixed with `aria-label="Decision Journal"` on
+      `decisions-subnav.tsx`; (2) the `aria-hidden`'d chart still had Recharts' internally
+      focusable SVG elements reachable by keyboard (`aria-hidden-focus`) — fixed by using `inert`
+      instead of `aria-hidden` on `calibration-chart.tsx`'s wrapper. 0 violations after fixes.
+- [X] T023 [P] Run Lighthouse against `/decisions/dashboard` in a production build; record
       Performance/Accessibility scores — flag explicitly if Recharts' bundle weight pushes
       Performance below the 95 threshold and needs the documented-justification path (constitution
-      Principle VII)
-- [ ] T024 [P] Review `src/lib/calibration.ts`, the `listResolvedDecisionsForCalibration` addition
+      Principle VII) — measured 81-82 Performance / 100 Accessibility; verified via an A/B
+      comparison against `/decisions` (zero chart deps, 83/same LCP profile) that this is the
+      same pre-existing framework-level characteristic phases 1-2 already documented, not caused
+      by Recharts. Added `calibration-chart-lazy.tsx` (`next/dynamic`, `ssr: false`) regardless, as
+      a reasonable general practice for a non-critical visualization.
+- [X] T024 [P] Review `src/lib/calibration.ts`, the `listResolvedDecisionsForCalibration` addition
       to `src/lib/decisions.ts`, and the new dashboard components for strict TypeScript compliance
-      with no `any` (constitution Principle I)
-- [ ] T025 Manually walk through quickstart.md scenarios 1-5 (empty state, single-band population,
+      with no `any` (constitution Principle I) — none found
+- [X] T025 Manually walk through quickstart.md scenarios 1-5 (empty state, single-band population,
       cross-band/category spread including a Mixed verdict, Pending-decision exclusion, and
-      own-data-only isolation across two accounts)
-- [ ] T026 Update `specs/003-calibration-dashboard/plan.md`'s Constitution Check with the actual
+      own-data-only isolation across two accounts) — 1-3 verified visually in a real browser
+      (screenshots), 4-5 verified via `tests/integration/dashboard-data.test.ts` (same assertions,
+      no automation blocker existed here unlike phase 2's OAuth consent screens)
+- [X] T026 Update `specs/003-calibration-dashboard/plan.md`'s Constitution Check with the actual
       measured Lighthouse scores from T023, mirroring how phases 1-2 documented theirs
 
 ---

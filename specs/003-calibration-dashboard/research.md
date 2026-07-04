@@ -2,18 +2,21 @@
 
 ## 1. Charting library: Recharts vs. alternatives vs. hand-rolled
 
-**Decision**: Use [Recharts](https://recharts.org/) for the confidence-band and category bar
-charts, with a `react-is` entry in `package.json`'s `overrides` field to force a version compatible
-with React 19.
+**Decision**: Use [Recharts](https://recharts.org/) (`^3.9.2`) for the confidence-band and
+category bar charts.
 
 **Rationale**: The user was offered a recommended default (hand-rolled SVG/CSS bars, zero new
 dependencies) and an alternative (a charting library) via a direct question, and chose the
 charting-library route for a more polished, interactive result. Of the mainstream React charting
 libraries, Recharts remains "the most practical default for charting libraries in 2026" per
 current guidance, is React-idiomatic (declarative `<BarChart>`/`<Bar>` composition rather than
-raw D3), and is well-suited to the simple bar-chart shape this feature needs. Its main friction
-point is peer-dependency lag against React 19 — installing it cleanly requires overriding the
-transitive `react-is` dependency rather than relying on Recharts' own declared peer range.
+raw D3), and is well-suited to the simple bar-chart shape this feature needs. Generic guidance
+found ahead of implementation warned that Recharts' peer-dependency range lags React 19 and would
+need a `react-is` override; **verified during implementation (T001) that this is no longer true**
+— the currently published `recharts@3.9.2` declares `react-is: ^16.8.0 || ^17.0.0 || ^18.0.0 ||
+^19.0.0` and installed cleanly against this project's React 19.2.7 with no override and no new
+`npm audit` findings (the existing moderate advisories are pre-existing, in `postcss`/`next`/
+`prisma` dev tooling, unrelated to this dependency).
 
 **Alternatives considered**:
 - **Hand-rolled SVG/CSS bars** — the recommended simpler default; zero new dependencies, smallest

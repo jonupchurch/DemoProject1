@@ -8,6 +8,7 @@ import {
   VERDICTS,
   ResolveInput,
 } from "@/lib/decision-types";
+import type { ResolvedDecisionForCalibration } from "@/lib/calibration";
 
 export { CATEGORIES, VERDICTS } from "@/lib/decision-types";
 export type {
@@ -284,6 +285,34 @@ export async function updateDecision(
   });
 
   return getDecision(id) as Promise<DecisionWithDetails>;
+}
+
+/**
+ * Phase 3 FR-002/FR-009: only the current owner's Resolved decisions, with just the fields
+ * the calibration dashboard's aggregation needs (no options — see data-model.md).
+ */
+export async function listResolvedDecisionsForCalibration(): Promise<
+  ResolvedDecisionForCalibration[]
+> {
+  const ownerId = await requireCurrentUserId();
+
+  const decisions = await prisma.decision.findMany({
+    where: { ownerId, status: "Resolved" },
+    select: {
+      confidence: true,
+      category: true,
+      resolution: { select: { verdict: true, satisfaction: true } },
+    },
+  });
+
+  return decisions
+    .filter((decision) => decision.resolution !== null)
+    .map((decision) => ({
+      confidence: decision.confidence,
+      category: decision.category,
+      verdict: decision.resolution!.verdict,
+      satisfaction: decision.resolution!.satisfaction,
+    }));
 }
 
 /** FR-012: delete a decision (and its options/resolution) regardless of status. */

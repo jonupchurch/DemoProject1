@@ -21,9 +21,9 @@ table so screen-reader users get the same information the chart conveys.
 **Language/Version**: TypeScript 5.x strict, Next.js 16 (App Router) / React 19 — unchanged from
 phases 1-2
 
-**Primary Dependencies**: `recharts` (NEW — user-selected charting library; requires a `react-is`
-override in `package.json` to resolve cleanly against React 19, per research.md §1), existing
-Prisma/`@prisma/adapter-pg` stack, `next-auth` (session check reused via `requireCurrentUserId()`)
+**Primary Dependencies**: `recharts@^3.9.2` (NEW — user-selected charting library; installs
+cleanly against React 19 with no override needed, per research.md §1), existing Prisma/
+`@prisma/adapter-pg` stack, `next-auth` (session check reused via `requireCurrentUserId()`)
 
 **Storage**: Same Postgres database as phases 1-2. No schema changes — this feature is a read-only
 aggregation over the existing `Decision`/`Resolution` tables (spec Assumptions); one new,
@@ -49,9 +49,6 @@ Recharts is a new client-side dependency, so its actual bundle/performance impac
 here, per the same practice phases 1-2 used for their own measured scores.
 
 **Constraints**:
-- **Recharts needs a `react-is` override**: its published peer-dependency range lags React 19;
-  without an `overrides` entry in `package.json`, install resolution is unreliable (research.md
-  §1). This is a one-time `package.json` change, not an ongoing maintenance burden.
 - **Recharts is a Client Component boundary**: `ResponsiveContainer`/`BarChart` need the DOM, so
   the chart itself is rendered from a small `"use client"` component. The aggregation (fetching +
   bucketing + scoring) stays in a Server Component and is passed down as plain data props — the
@@ -85,17 +82,28 @@ scale.
 - **III. Privacy & Data Ownership (NON-NEGOTIABLE)** — PASS. The new query reuses
   `requireCurrentUserId()` and filters by `ownerId` exactly like every existing query in
   `lib/decisions.ts`; no cross-account data path exists.
-- **IV. WCAG 2.1 AA Accessibility (NON-NEGOTIABLE)** — PASS, with an explicit mitigation: Recharts'
-  bars are paired with a visible, semantic `<table>` carrying the same figures, so screen-reader
-  users are not dependent on the chart library's own accessibility behavior. Verified with axe
-  during implementation, as in prior phases.
+- **IV. WCAG 2.1 AA Accessibility (NON-NEGOTIABLE)** — PASS, with two mitigations found and fixed
+  via axe during implementation: (1) Recharts' bars are paired with a visible, semantic `<table>`
+  carrying the same figures, so screen-reader users are not dependent on the chart library's own
+  accessibility behavior; (2) the chart wrapper uses `inert` rather than `aria-hidden` alone, since
+  Recharts renders internally focusable SVG elements that `aria-hidden` alone would still leave
+  reachable by keyboard (`aria-hidden-focus`); (3) the new in-app sub-nav's `<nav>` got an
+  `aria-label` to avoid colliding with the site-wide nav's `<nav>` landmark (`landmark-unique`).
+  0 axe violations after fixes, in both the empty-state and populated states.
 - **V. Transparent AI Assistance** — N/A, no AI content in this phase.
 - **VI. Clean, Elegant Design** — PASS. Chart colors and spacing reuse the existing Tailwind design
   tokens rather than Recharts' default palette.
-- **VII. Performance & Quality Bar (Lighthouse)** — **To be measured** during implementation
-  against a production build of `/decisions/dashboard`, exactly like phases 1-2's own documented
-  scores; Recharts' bundle weight is the main risk to this gate and will be called out explicitly
-  if it requires the documented-justification path.
+- **VII. Performance & Quality Bar (Lighthouse)** — **Measured**: `/decisions/dashboard` (production
+  build, authenticated, populated state) scores Accessibility 100, Performance 81-82. This sits
+  within phases 1-2's already-documented 78-91 Performance range. To confirm Recharts specifically
+  wasn't the cause, `/decisions` (same build, zero chart dependencies) was measured for comparison
+  and scored Performance 83 with an almost identical Largest Contentful Paint profile (4.7s, 90%
+  "Render Delay" vs. the dashboard's 5.1s/91%) — i.e., the same framework-level characteristic
+  phase 1's plan already documented and justified, not a regression introduced by this feature.
+  `calibration-chart.tsx` is nonetheless loaded via `next/dynamic({ ssr: false })`
+  (`calibration-chart-lazy.tsx`) so Recharts' bundle isn't on the critical path for initial
+  hydration — a reasonable general practice for a supplementary, non-critical visualization,
+  independent of today's measurement.
 
 No unresolved violations against NON-NEGOTIABLE principles. One item is recorded in Complexity
 Tracking below (the Recharts dependency), since it is a real addition to the stack, not because it

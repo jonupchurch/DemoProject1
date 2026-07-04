@@ -1,4 +1,5 @@
 import { requireCurrentUserId } from "@/lib/session";
+import { DecisionsSubnav } from "@/components/decisions/decisions-subnav";
 
 // The actual enforcement point for constitution Principle III — proxy.ts
 // gives a fast-path redirect, but CVE-2025-29927 means that alone isn't
@@ -11,5 +12,10 @@ export default async function DecisionsLayout({
   children: React.ReactNode;
 }) {
   await requireCurrentUserId();
-  return children;
+  return (
+    <>
+      <DecisionsSubnav />
+      {children}
+    </>
+  );
 }
