@@ -5,8 +5,9 @@ import {
   updateResolution,
   updateDecision,
   deleteDecision,
+  SerializedDecision,
 } from "@/actions/decisions";
-import { listDecisions, getDecision, DecisionWithDetails } from "@/lib/decisions";
+import { listDecisions, getDecision } from "@/lib/decisions";
 import { ensureTestUser, mockSessionAs, resetDecisions } from "./setup";
 
 beforeAll(async () => {
@@ -18,7 +19,7 @@ afterEach(async () => {
   await resetDecisions();
 });
 
-async function createPendingDecision(): Promise<DecisionWithDetails> {
+async function createPendingDecision(): Promise<SerializedDecision> {
   const result = await createDecision({
     title: "Lease or buy a car?",
     options: [{ name: "Lease" }, { name: "Buy" }],
@@ -69,6 +70,27 @@ describe("createDecision (Server Action)", () => {
     expect(result.errors.title).toBeDefined();
     expect(result.errors.options).toBeDefined();
     expect(result.errors.confidence).toBeDefined();
+  });
+
+  it("returns cost as a plain number, not a Prisma Decimal instance (regression: RSC serialization)", async () => {
+    // Next.js throws "Only plain objects can be passed to Client Components"
+    // if a Server Action returns a Decimal instance to its Client Component
+    // caller — this doesn't surface in a plain Vitest call (no real RSC
+    // boundary), so the check has to be explicit rather than relying on a
+    // thrown error.
+    const result = await createDecision({
+      title: "Decision with a real cost",
+      options: [{ name: "Option 1" }],
+      cost: 250,
+      confidence: 60,
+      category: "Financial",
+      reviewDate: "2026-12-01",
+    });
+
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+    expect(result.data.cost).toBe(250);
+    expect(typeof result.data.cost).toBe("number");
   });
 
   it("accepts a review date in the past (spec.md US1 scenario 3)", async () => {
