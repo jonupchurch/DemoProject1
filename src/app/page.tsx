@@ -10,8 +10,8 @@ export default async function Home() {
   const session = await auth();
 
   // One slide per mini-app on this site (constitution's Multi-App
-  // Structure) — Decision Journal is the only one built out so far; more
-  // are added here, one entry each, as they ship (Purpose section).
+  // Structure) — more are added here, one entry each, as they ship
+  // (Purpose section).
   const apps: AppShowcaseSlide[] = [
     {
       id: "decision-journal",
@@ -46,29 +46,44 @@ export default async function Home() {
         },
       ],
     },
-    // TEMPORARY placeholder slide (lorem ipsum) proving the carousel
-    // actually handles 2+ slides correctly — remove once a real second
-    // mini-app ships, or replace its content with that app's real copy.
     {
-      id: "lorem-ipsum-placeholder",
-      title: "Lorem Ipsum",
+      id: "travel-photo-map",
+      title: "Travel Photo Map",
       subtitle:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "Pin the places you've been, publish a gallery of photos there, and browse everyone else's pins on a live, public map.",
       backgroundImage: "/img/image2.png",
       // Only used as a fallback if backgroundImage is ever removed.
-      backgroundClassName: "bg-gradient-to-br from-gray-700 via-gray-600 to-gray-900",
+      backgroundClassName: "bg-gradient-to-br from-teal-700 via-cyan-700 to-blue-900",
+      cta: (
+        <div className="flex flex-col items-center gap-3 sm:flex-row">
+          <Link
+            href="/travel"
+            className="rounded-card bg-brand-500 px-6 py-3 font-medium text-white hover:bg-brand-600"
+          >
+            Explore the map
+          </Link>
+          {session?.user && (
+            <Link
+              href="/travel/new"
+              className="rounded-card border border-white/70 px-6 py-3 font-medium text-white hover:bg-white/10"
+            >
+              Pin a photo
+            </Link>
+          )}
+        </div>
+      ),
       features: [
         {
-          title: "Lorem ipsum dolor sit amet",
-          body: "Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+          title: "Pin your favorite places",
+          body: "Choose a point on the map, upload a gallery of photos, and publish — all in one flow, with a clear notice before it goes public.",
         },
         {
-          title: "Ut enim ad minim veniam",
-          body: "Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+          title: "Browse publicly, no sign-in needed",
+          body: "Every pin is visible to any visitor, via a live map or a simple accessible list — this is the one mini-app anyone can explore right away.",
         },
         {
-          title: "Duis aute irure dolor",
-          body: "In reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+          title: "Your pins, your control",
+          body: "Only you can edit a pin's details, manage its photos, or delete it — enforced server-side on every request, not just hidden in the UI.",
         },
       ],
     },

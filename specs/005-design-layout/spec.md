@@ -143,9 +143,9 @@ the Sign Out control is styled as a bordered/padded button.
 - What happens when only one carousel slide exists, and a screen reader user reaches it? It reads
   as an ordinary hero section — no misleading carousel semantics (prev/next controls, live region)
   are present when there's nothing to navigate between.
-- What happens to the temporary lorem-ipsum second slide? It is explicitly a placeholder to prove
-  the multi-slide mechanics work correctly; it is removed once a real second mini-app ships, or its
-  content is replaced with that app's real copy at that time (Assumptions).
+- What happens to the temporary lorem-ipsum second slide? It was explicitly a placeholder to prove
+  the multi-slide mechanics work correctly; **resolved 2026-07-04** — its content was replaced with
+  Travel Photo Map's real copy/CTA once that app shipped (Assumptions).
 
 ## Requirements *(mandatory)*
 
@@ -202,10 +202,11 @@ the Sign Out control is styled as a bordered/padded button.
   personal contacts/CRM-style mini-app), not a public "reach out to me" form — this is why it is
   gated behind sign-in the same way mini-apps are, per the project owner's explicit instruction,
   rather than left public the way a typical portfolio contact form would be.
-- The lorem-ipsum second carousel slide is a deliberate, temporary placeholder added solely to
+- The lorem-ipsum second carousel slide was a deliberate, temporary placeholder added solely to
   prove the carousel's multi-slide mechanics (navigation chrome appearing, feature cards updating)
-  work correctly before any real second mini-app exists. It is expected to be removed or replaced
-  with real content once that app ships.
+  work correctly before any real second mini-app existed. **Resolved 2026-07-04**: replaced with
+  Travel Photo Map's real copy/CTA once that app shipped (`specs/006-travel-photo-map/`) — the
+  same background photo was kept, only the text/features/CTA changed.
 - A slide's background image is optional; without one, a gradient (matching the site's existing
   design tokens) is used instead. The Decision Journal slide's image is a real photo supplied by
   the project owner; future slides may or may not have one.

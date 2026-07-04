@@ -267,3 +267,13 @@ here.
   blocking script is the standard, simpler pattern for this exact problem.
 - **Re-theme the map tiles too** — rejected for this pass per the "known, accepted limitation"
   above; would need a second tile style and a way to swap it based on the resolved color scheme.
+
+**Bug found in real use, fixed same day**: the project owner hit a live React hydration-mismatch
+error after this shipped — `THEME_INIT_SCRIPT` sets `.dark` on `<html>` directly, outside React,
+before hydration runs, so the server-rendered markup (which can't know the visitor's stored/OS
+preference) never has that class while the actual DOM does by the time React hydrates. Fixed by
+adding `suppressHydrationWarning` to the `<html>` element specifically (`layout.tsx`) — the standard
+React/Next.js pattern for this exact "a blocking script intentionally sets an attribute before
+hydration" scenario (the same approach `next-themes` and similar libraries use). This only ever
+surfaces in `next dev`'s error overlay, not a production build, which is why it wasn't caught by
+this feature's own `next start`-based verification pass.

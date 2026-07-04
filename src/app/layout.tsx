@@ -25,8 +25,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // suppressHydrationWarning below: THEME_INIT_SCRIPT sets `.dark` on <html>
+  // directly, outside React, before hydration runs — the server never
+  // renders that class at all (it can't know the visitor's stored/OS
+  // preference), so React would otherwise flag every dark-mode page load as
+  // a hydration mismatch even though this divergence is intentional.
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
