@@ -1,1 +1,35 @@
 @import "tailwindcss";
+
+/*
+  Shared design tokens (constitution Principle VI: one consistent design
+  system rather than ad hoc per-page styling). Extends Tailwind's default
+  scale with the semantic colors this app's status/verdict states need;
+  everything else (spacing, type scale) uses Tailwind's built-in scale as-is.
+*/
+@theme {
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-500: #2563eb;
+  --color-brand-600: #1d4ed8;
+  --color-brand-700: #1e40af;
+
+  /*
+    Darkened from the more common Tailwind 500/600 shades: at those shades,
+    text-on-tint badge combinations like these measure under the WCAG AA
+    4.5:1 minimum (an axe scan caught this in the Pending badge; verified by
+    calculation for all three below — Principle IV is NON-NEGOTIABLE).
+  */
+  --color-status-pending: #92400e;
+  --color-status-pending-bg: #fef3c7;
+  --color-status-resolved: #166534;
+  --color-status-resolved-bg: #dcfce7;
+
+  --color-verdict-right: #166534;
+  --color-verdict-right-bg: #dcfce7;
+  --color-verdict-wrong: #991b1b;
+  --color-verdict-wrong-bg: #fee2e2;
+  --color-verdict-mixed: #92400e;
+  --color-verdict-mixed-bg: #fef3c7;
+
+  --radius-card: 0.75rem;
+}

@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Category {
+  Financial
+  Career
+  Relationships
+  Health
+  Housing
+  Other
+}
+
+enum DecisionStatus {
+  Pending
+  Resolved
+}
+
+enum Verdict {
+  Right
+  Wrong
+  Mixed
+}
+
+// Placeholder for the account system phase 2 introduces (research.md §5).
+// Exactly one row exists in this phase.
+model Owner {
+  id        String     @id @default(uuid())
+  createdAt DateTime   @default(now())
+  decisions Decision[]
+}
+
+model Decision {
+  id         String         @id @default(uuid())
+  ownerId    String
+  owner      Owner          @relation(fields: [ownerId], references: [id])
+  title      String
+  cost       Decimal?
+  risks      String?
+  notes      String?
+  confidence Int
+  category   Category
+  reviewDate DateTime       @db.Date
+  status     DecisionStatus @default(Pending)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  options    Option[]
+  resolution Resolution?
+
+  @@index([ownerId])
+  @@index([reviewDate])
+  @@index([category])
+}
+
+model Option {
+  id         String   @id @default(uuid())
+  decisionId String
+  decision   Decision @relation(fields: [decisionId], references: [id], onDelete: Cascade)
+  name       String
+  pros       String?
+  cons       String?
+  sortOrder  Int
+
+  @@index([decisionId])
+}
+
+model Resolution {
+  id            String   @id @default(uuid())
+  decisionId    String   @unique
+  decision      Decision @relation(fields: [decisionId], references: [id], onDelete: Cascade)
+  verdict       Verdict
+  satisfaction  Int
+  learnings     String?
+  resolvedAt    DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

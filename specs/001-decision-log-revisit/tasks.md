@@ -32,15 +32,15 @@ Single Next.js App Router project per plan.md — `src/`, `prisma/`, `tests/` at
 
 **Purpose**: Add the dependencies and tooling this feature needs on top of the existing Next.js scaffold
 
-- [ ] T001 Add `prisma`, `@prisma/client`, `vitest`, `@testing-library/react`,
+- [X] T001 Add `prisma`, `@prisma/client`, `vitest`, `@testing-library/react`,
       `@testing-library/jest-dom`, and `jsdom` as dependencies in `package.json`
-- [ ] T002 [P] Configure Vitest in `vitest.config.ts` (jsdom environment, `@/*` path alias matching
+- [X] T002 [P] Configure Vitest in `vitest.config.ts` (jsdom environment, `@/*` path alias matching
       `tsconfig.json`)
-- [ ] T003 [P] Document `POSTGRES_PRISMA_URL` and `POSTGRES_URL_NON_POOLING` in `.env.example`
+- [X] T003 [P] Document `POSTGRES_PRISMA_URL` and `POSTGRES_URL_NON_POOLING` in `.env.example`
       (research.md §2)
-- [ ] T004 [P] Run `npx prisma init` to create `prisma/schema.prisma` with the pooled/direct
+- [X] T004 [P] Run `npx prisma init` to create `prisma/schema.prisma` with the pooled/direct
       datasource pattern from research.md §2
-- [ ] T005 [P] Add shared design tokens (spacing/type/color scale) to `src/app/globals.css` /
+- [X] T005 [P] Add shared design tokens (spacing/type/color scale) to `src/app/globals.css` /
       Tailwind config per constitution Principle VI, reused by every later phase
 
 ---
@@ -51,15 +51,15 @@ Single Next.js App Router project per plan.md — `src/`, `prisma/`, `tests/` at
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T006 Define `Owner`, `Decision`, and `Option` models (with `Category`/`Status` enums and the
+- [X] T006 Define `Owner`, `Decision`, and `Option` models (with `Category`/`Status` enums and the
       `ownerId`/`reviewDate`/`category` indexes) in `prisma/schema.prisma` per data-model.md
       (Resolution model is added later, in Phase 4 — only US2 needs it)
-- [ ] T007 Run the initial migration: `npx prisma migrate dev --name init` (depends on T006)
-- [ ] T008 [P] Create the Prisma client singleton in `src/lib/db.ts`
-- [ ] T009 [P] Create `prisma/seed.ts` seeding a single `Owner` row; wire it into `package.json`'s
+- [X] T007 Run the initial migration: `npx prisma migrate dev --name init` (depends on T006)
+- [X] T008 [P] Create the Prisma client singleton in `src/lib/db.ts`
+- [X] T009 [P] Create `prisma/seed.ts` seeding a single `Owner` row; wire it into `package.json`'s
       `prisma.seed` config (depends on T006)
-- [ ] T010 [P] Create `src/lib/owner.ts` exposing `getCurrentOwnerId()` per research.md §5
-- [ ] T011 Update `src/app/page.tsx` to link to `/decisions` (shared entry point for every story)
+- [X] T010 [P] Create `src/lib/owner.ts` exposing `getCurrentOwnerId()` per research.md §5
+- [X] T011 Update `src/app/page.tsx` to link to `/decisions` (shared entry point for every story)
 
 **Checkpoint**: Foundation ready — user story implementation can now begin
 
@@ -75,26 +75,26 @@ decisions list with a "Pending" status (spec.md US1).
 
 ### Tests for User Story 1 ⚠️ (write first, confirm they fail before implementing)
 
-- [ ] T012 [P] [US1] Unit test decision validation (confidence 0–100 range, at least one option
+- [X] T012 [P] [US1] Unit test decision validation (confidence 0–100 range, at least one option
       required, required-field checks) in `tests/unit/decisions.test.ts`
-- [ ] T013 [P] [US1] Integration test `createDecision` against a real test database in
+- [X] T013 [P] [US1] Integration test `createDecision` against a real test database in
       `tests/integration/decisions-actions.test.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T014 [US1] Implement `createDecision`, `listDecisions`, `getDecision` in
+- [X] T014 [US1] Implement `createDecision`, `listDecisions`, `getDecision` in
       `src/lib/decisions.ts` per contracts/server-actions.md (depends on T006–T010)
-- [ ] T015 [US1] Implement the `createDecision` Server Action in `src/actions/decisions.ts`,
+- [X] T015 [US1] Implement the `createDecision` Server Action in `src/actions/decisions.ts`,
       enforcing FR-002/FR-013 validation (depends on T014)
-- [ ] T016 [P] [US1] Build `decision-form` (dynamic option rows, each with name/pros/cons) in
+- [X] T016 [P] [US1] Build `decision-form` (dynamic option rows, each with name/pros/cons) in
       `src/components/decisions/decision-form.tsx`
-- [ ] T017 [US1] Build the new-decision page in `src/app/decisions/new/page.tsx` using
+- [X] T017 [US1] Build the new-decision page in `src/app/decisions/new/page.tsx` using
       `decision-form` + the `createDecision` action (depends on T015, T016)
-- [ ] T018 [US1] Build the decisions list page (Server Component) in `src/app/decisions/page.tsx`
+- [X] T018 [US1] Build the decisions list page (Server Component) in `src/app/decisions/page.tsx`
       using `listDecisions` (depends on T014)
-- [ ] T019 [US1] Build the decision detail page (Server Component) in
+- [X] T019 [US1] Build the decision detail page (Server Component) in
       `src/app/decisions/[id]/page.tsx` using `getDecision` (depends on T014)
-- [ ] T020 [US1] Add empty-state guidance to `src/app/decisions/page.tsx` for zero logged decisions
+- [X] T020 [US1] Add empty-state guidance to `src/app/decisions/page.tsx` for zero logged decisions
       (edge case, spec.md)
 
 **Checkpoint**: User Story 1 is fully functional and testable independently — decisions can be
@@ -112,25 +112,25 @@ original entry, and later correct the resolution itself.
 
 ### Tests for User Story 2 ⚠️ (write first, confirm they fail before implementing)
 
-- [ ] T021 [P] [US2] Unit test resolution validation and locking rules (satisfaction 1–5 range,
+- [X] T021 [P] [US2] Unit test resolution validation and locking rules (satisfaction 1–5 range,
       resolved-entry immutability, already-resolved routes to edit) in
       `tests/unit/decisions.test.ts`
-- [ ] T022 [P] [US2] Integration test `resolveDecision` and `updateResolution` against a real test
+- [X] T022 [P] [US2] Integration test `resolveDecision` and `updateResolution` against a real test
       database in `tests/integration/decisions-actions.test.ts`
 
 ### Implementation for User Story 2
 
-- [ ] T023 [US2] Add the `Resolution` model to `prisma/schema.prisma` per data-model.md and run
+- [X] T023 [US2] Add the `Resolution` model to `prisma/schema.prisma` per data-model.md and run
       `npx prisma migrate dev --name add-resolution`
-- [ ] T024 [US2] Extend `src/lib/decisions.ts` with `resolveDecision`/`updateResolution`, enforcing
+- [X] T024 [US2] Extend `src/lib/decisions.ts` with `resolveDecision`/`updateResolution`, enforcing
       immutability of a resolved decision's original entry (depends on T023, T014)
-- [ ] T025 [US2] Implement the `resolveDecision`/`updateResolution` Server Actions in
+- [X] T025 [US2] Implement the `resolveDecision`/`updateResolution` Server Actions in
       `src/actions/decisions.ts` per contracts/server-actions.md (depends on T024)
-- [ ] T026 [P] [US2] Build `resolve-form` (verdict/satisfaction/learnings) in
+- [X] T026 [P] [US2] Build `resolve-form` (verdict/satisfaction/learnings) in
       `src/components/decisions/resolve-form.tsx`
-- [ ] T027 [US2] Wire resolve / edit-resolution entry points into
+- [X] T027 [US2] Wire resolve / edit-resolution entry points into
       `src/app/decisions/[id]/page.tsx` (depends on T025, T026)
-- [ ] T028 [US2] Render a resolved decision's original entry as read-only in
+- [X] T028 [US2] Render a resolved decision's original entry as read-only in
       `src/app/decisions/[id]/page.tsx` (depends on T027)
 
 **Checkpoint**: User Stories 1 and 2 together form the MVP — the full log → resolve loop works
@@ -148,15 +148,15 @@ list, each opening to its full detail (spec.md US3).
 
 ### Tests for User Story 3 ⚠️ (write first, confirm they fail before implementing)
 
-- [ ] T029 [P] [US3] Integration test confirming `listDecisions` returns both pending and resolved
+- [X] T029 [P] [US3] Integration test confirming `listDecisions` returns both pending and resolved
       decisions, and `getDecision` includes resolution data when present, in
       `tests/integration/decisions-actions.test.ts`
 
 ### Implementation for User Story 3
 
-- [ ] T030 [US3] Ensure `src/app/decisions/page.tsx` shows each decision's status and flags
+- [X] T030 [US3] Ensure `src/app/decisions/page.tsx` shows each decision's status and flags
       decisions whose review date has arrived or passed (FR-006) (depends on T018)
-- [ ] T031 [US3] Ensure `src/app/decisions/[id]/page.tsx` renders resolution details when present
+- [X] T031 [US3] Ensure `src/app/decisions/[id]/page.tsx` renders resolution details when present
       (depends on T019, T027)
 
 **Checkpoint**: User Stories 1, 2, and 3 are all functional independently.
@@ -173,18 +173,18 @@ confirmation.
 
 ### Tests for User Story 4 ⚠️ (write first, confirm they fail before implementing)
 
-- [ ] T032 [P] [US4] Unit test edit rejection on resolved decisions and the minimum-one-option rule
+- [X] T032 [P] [US4] Unit test edit rejection on resolved decisions and the minimum-one-option rule
       on option removal, in `tests/unit/decisions.test.ts`
-- [ ] T033 [P] [US4] Integration test `updateDecision` and `deleteDecision` against a real test
+- [X] T033 [P] [US4] Integration test `updateDecision` and `deleteDecision` against a real test
       database in `tests/integration/decisions-actions.test.ts`
 
 ### Implementation for User Story 4
 
-- [ ] T034 [US4] Implement `updateDecision`/`deleteDecision` in `src/lib/decisions.ts` and their
+- [X] T034 [US4] Implement `updateDecision`/`deleteDecision` in `src/lib/decisions.ts` and their
       Server Actions in `src/actions/decisions.ts` per contracts/server-actions.md (depends on T014)
-- [ ] T035 [P] [US4] Build the edit-decision page in `src/app/decisions/[id]/edit/page.tsx`,
+- [X] T035 [P] [US4] Build the edit-decision page in `src/app/decisions/[id]/edit/page.tsx`,
       reusing `decision-form` (depends on T016, T034)
-- [ ] T036 [US4] Add a delete-confirmation control wired to `deleteDecision` in
+- [X] T036 [US4] Add a delete-confirmation control wired to `deleteDecision` in
       `src/app/decisions/[id]/page.tsx` (depends on T034)
 
 **Checkpoint**: All four user stories are functional independently.
@@ -193,14 +193,14 @@ confirmation.
 
 ## Final Phase: Polish & Cross-Cutting Concerns
 
-- [ ] T037 [P] Run an automated accessibility check (e.g. axe) against all `/decisions` pages and
+- [X] T037 [P] Run an automated accessibility check (e.g. axe) against all `/decisions` pages and
       fix violations (constitution Principle IV)
-- [ ] T038 [P] Run Lighthouse against `/decisions` and `/decisions/[id]` in a production build;
+- [X] T038 [P] Run Lighthouse against `/decisions` and `/decisions/[id]` in a production build;
       tune until Performance and Accessibility both score 95+ (constitution Principle VII)
-- [ ] T039 Replace the leftover scaffold metadata ("Typescript2" title/description) in
+- [X] T039 Replace the leftover scaffold metadata ("Typescript2" title/description) in
       `src/app/layout.tsx` with real values
-- [ ] T040 Run every `quickstart.md` validation scenario end-to-end
-- [ ] T041 [P] Review `src/lib/decisions.ts` and `src/actions/decisions.ts` for strict TypeScript
+- [X] T040 Run every `quickstart.md` validation scenario end-to-end
+- [X] T041 [P] Review `src/lib/decisions.ts` and `src/actions/decisions.ts` for strict TypeScript
       compliance with no `any` (constitution Principle I)
 
 ---

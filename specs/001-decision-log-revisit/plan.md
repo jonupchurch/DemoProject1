@@ -78,12 +78,27 @@ decisions for the one owner; no multi-tenant load or high-concurrency design nee
 - **VI. Clean, Elegant Design** — PASS. This phase establishes the shared Tailwind design tokens
   (spacing/type/color scale) that every later phase reuses, rather than each phase inventing its
   own styling.
-- **VII. Performance & Quality Bar (Lighthouse)** — PASS (to be measured during implementation).
-  Server-Components-first rendering keeps client JS minimal; `ownerId`, `reviewDate`, and `category`
-  are indexed from the start since later phases (dashboard, filtering) will query on them, avoiding
-  a schema migration under load later.
+- **VII. Performance & Quality Bar (Lighthouse)** — **Accessibility PASS (95-96/100); Performance
+  documented exception (78-91/100, target 95).** Measured against a local production build
+  (`next build && next start`) with a `.browserslistrc` targeting modern evergreen browsers only
+  (removed ~45 KiB of unneeded legacy-JS polyfills, a real fix). The remaining Performance gap
+  traces to Next.js 16 + Turbopack's own framework/router JS chunks — shared across every route,
+  40-90% "unused" per individual page by design — plus CPU contention from running the Lighthouse
+  + Chromium measurement tooling on the same local machine as the server under test (TTFB was
+  nearly identical between a static and a dynamic page, a signature of Lighthouse's simulated
+  throttling model rather than real server latency). This isn't fixable by trimming our own
+  application code further: the app already renders via Server Components with only four small
+  Client Components total, and no heavy client-side dependencies. **Follow-up**: re-measure
+  Performance against an actual Vercel deployment once phase 2 ships — dedicated serverless
+  resources, real CDN/edge delivery, and no local measurement-tool contention should give a fairer
+  reading, and is the more realistic test of this principle's intent anyway. Indexes on `ownerId`,
+  `reviewDate`, and `category` are in place from the start since later phases (dashboard, filtering)
+  will query on them.
 
-No unresolved violations. Complexity Tracking table is intentionally empty (see below).
+No unresolved violations against NON-NEGOTIABLE principles (II, III, IV). Principle VII's
+Performance sub-target has a documented exception per above; Complexity Tracking table is
+intentionally empty (see below) since this isn't a structural/architectural violation requiring a
+simpler-alternative justification.
 
 ## Project Structure
 
