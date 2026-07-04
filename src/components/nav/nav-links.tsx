@@ -18,7 +18,7 @@ export function NavLinks() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex items-center gap-6">
+    <nav className="flex items-center gap-4">
       {LINKS.map((link) => {
         const active = isActive(pathname, link.href);
         return (

@@ -215,3 +215,16 @@ with axe (0 violations on `/` and `/about`) and browser checks of nav/redirect b
 signed-out visitors. **Pending**: the signed-in avatar rendering (a real Google/GitHub profile image
 showing correctly in the nav) still needs a manual check by the project owner — automated browser
 tools can't drive a real Google/GitHub sign-in (research.md §6).
+
+**2026-07-04 (same day) — Nav branding and spacing pass.** Follow-up polish on the nav bar above:
+- Brand text changed from "Decision Journal" to "Jon Upchurch Showcase" in `nav-bar.tsx` (the page
+  `<title>`/metadata in `src/app/layout.tsx` is unchanged — still "Decision Journal" — since that's
+  the product name for SEO/tab purposes, distinct from the nav's personal-portfolio framing).
+- A vertical divider (`border-l`, decorative/`aria-hidden`) added between the brand and the nav
+  links, with the same `gap-4` (16px) spacing on both sides.
+- `NavLinks`' internal item spacing changed from `gap-6` to `gap-4` to match that same rhythm, and
+  a `flex-1` spacer added so the brand/divider/links cluster stays left-aligned while the avatar/
+  sign-in control stays pinned to the far right (previously `justify-between` spread all three
+  groups across the bar).
+
+Re-verified: 68/68 tests pass, axe still reports 0 violations on `/` and `/about`.
