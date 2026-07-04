@@ -86,10 +86,11 @@ risk to this gate is expected beyond the already-documented framework-level base
 - **V. Transparent AI Assistance** — N/A, no AI content in this phase.
 - **VI. Clean, Elegant Design** — PASS. Filter bar and timeline reuse existing Tailwind design
   tokens and badge styles rather than introducing new visual patterns.
-- **VII. Performance & Quality Bar (Lighthouse)** — **To be measured** during implementation
-  against production builds of `/decisions` (with filters active) and `/decisions/timeline`, same
-  practice as prior phases. No new dependency is introduced, so no new risk to this gate is
-  expected beyond the already-documented 78-91 framework-level range (phases 1-3).
+- **VII. Performance & Quality Bar (Lighthouse)** — **Measured**: both `/decisions` (populated,
+  filters/search rendered) and `/decisions/timeline` (populated) scored Performance 82 /
+  Accessibility 100 on a production build. This sits squarely within phases 1-3's already-
+  documented 78-91 Performance range, confirming this is the same framework-level characteristic,
+  not a regression — consistent with there being no new dependency this phase.
 
 No unresolved violations against NON-NEGOTIABLE principles. Complexity Tracking table is
 intentionally empty — no new dependencies or framework-forced patterns need justifying this phase.

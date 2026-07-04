@@ -1,4 +1,4 @@
-import type { Category, Verdict } from "@prisma/client";
+import type { Category, DecisionStatus, Verdict } from "@prisma/client";
 
 // Client-safe: no Prisma runtime import here. Client Components (e.g.
 // decision-form.tsx) must import from this module, never from
@@ -30,6 +30,8 @@ export interface CreateDecisionInput {
 }
 
 export const VERDICTS: Verdict[] = ["Right", "Wrong", "Mixed"];
+
+export const STATUSES: DecisionStatus[] = ["Pending", "Resolved"];
 
 export interface ResolveInput {
   verdict: Verdict;

@@ -36,11 +36,11 @@ separate Setup phase — work begins directly at Foundational.
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T001 [P] Add `DecisionFilters` type and `parseDecisionFilters(searchParams)` in
+- [X] T001 [P] Add `DecisionFilters` type and `parseDecisionFilters(searchParams)` in
       `src/lib/decision-filters.ts` per contracts/decision-queries.md — parses `category`,
       `status`, `verdict`, and `q` all at once; unknown/invalid values ignored, whitespace-only
       `q` becomes `undefined`
-- [ ] T002 [P] Add `countDecisions()` to `src/lib/decisions.ts` — `prisma.decision.count({ where:
+- [X] T002 [P] Add `countDecisions()` to `src/lib/decisions.ts` — `prisma.decision.count({ where:
       { ownerId } })` via `requireCurrentUserId()`, per data-model.md
 
 **Checkpoint**: URL parsing and the total-count query exist. `listDecisions()` itself doesn't
@@ -59,24 +59,24 @@ list (spec.md US1).
 
 ### Tests for User Story 1 ⚠️ (write first, confirm they fail before implementing)
 
-- [ ] T003 [P] [US1] Unit test `parseDecisionFilters`'s category/status/verdict parsing in
+- [X] T003 [P] [US1] Unit test `parseDecisionFilters`'s category/status/verdict parsing in
       `tests/unit/decision-filters.test.ts`: single value, multiple values, and an
       unknown/invalid value being ignored rather than erroring, for each of the three fields
-- [ ] T004 [P] [US1] Integration test `listDecisions(filters)` in
+- [X] T004 [P] [US1] Integration test `listDecisions(filters)` in
       `tests/integration/decision-filtering.test.ts`: filtering by one category, by one status,
       by a verdict (confirming Pending decisions are excluded), and by a combined category+status
       filter (FR-001–FR-004); confirm ownership scoping is unaffected
 
 ### Implementation for User Story 1
 
-- [ ] T005 [US1] Extend `listDecisions()` in `src/lib/decisions.ts` to accept an optional
+- [X] T005 [US1] Extend `listDecisions()` in `src/lib/decisions.ts` to accept an optional
       `DecisionFilters` parameter and apply the `category`/`status`/`resolution.verdict` `where`
       clauses per data-model.md (depends on T001; T004 must fail first)
-- [ ] T006 [P] [US1] Build `DecisionFilterControls` (category/status/verdict checkboxes + a
+- [X] T006 [P] [US1] Build `DecisionFilterControls` (category/status/verdict checkboxes + a
       "Clear filters" control) in `src/components/decisions/decision-filter-controls.tsx` —
       `"use client"`, reads `useSearchParams()`, writes via `router.replace()` against
       `usePathname()`
-- [ ] T007 [US1] Update `src/app/decisions/page.tsx`: read `searchParams`, call
+- [X] T007 [US1] Update `src/app/decisions/page.tsx`: read `searchParams`, call
       `parseDecisionFilters`, then `listDecisions(filters)` and `countDecisions()`; render
       `DecisionFilterControls` plus the list, the existing phase 1 "no decisions yet" empty
       state, or the new FR-008 "no matches" state (depends on T002, T005, T006)
@@ -96,10 +96,10 @@ confirm a nonsense search shows a clear "no matches" message (spec.md US2).
 
 ### Tests for User Story 2 ⚠️ (write first, confirm they fail before implementing)
 
-- [ ] T008 [P] [US2] Unit test `parseDecisionFilters`'s search parsing in
+- [X] T008 [P] [US2] Unit test `parseDecisionFilters`'s search parsing in
       `tests/unit/decision-filters.test.ts`: a normal term is trimmed and kept; an empty or
       whitespace-only `q` becomes `undefined` (edge case, spec.md)
-- [ ] T009 [P] [US2] Integration test `listDecisions(filters)` search in
+- [X] T009 [P] [US2] Integration test `listDecisions(filters)` search in
       `tests/integration/decision-filtering.test.ts`: a term matching only in `title`, only in
       `risks`, only in `notes`, and only in a resolved decision's `learnings`, each found
       correctly (FR-006); a search term combined with an active category filter narrows to the
@@ -107,14 +107,14 @@ confirm a nonsense search shows a clear "no matches" message (spec.md US2).
 
 ### Implementation for User Story 2
 
-- [ ] T010 [US2] Extend `listDecisions()` in `src/lib/decisions.ts` to also apply the
+- [X] T010 [US2] Extend `listDecisions()` in `src/lib/decisions.ts` to also apply the
       case-insensitive `OR` search clause across `title`/`risks`/`notes`/`resolution.learnings`
       when `filters.search` is set (depends on T005; T009 must fail first)
-- [ ] T011 [P] [US2] Build `DecisionSearchInput` in
+- [X] T011 [P] [US2] Build `DecisionSearchInput` in
       `src/components/decisions/decision-search-input.tsx` — `"use client"`, same
       `useSearchParams()`/`router.replace()` pattern as `DecisionFilterControls`, writing the `q`
       param
-- [ ] T012 [US2] Update `src/app/decisions/page.tsx` to render `DecisionSearchInput` alongside
+- [X] T012 [US2] Update `src/app/decisions/page.tsx` to render `DecisionSearchInput` alongside
       `DecisionFilterControls` (depends on T007, T010, T011)
 
 **Checkpoint**: User Stories 1 and 2 both work together — filtering and search combine correctly.
@@ -132,21 +132,21 @@ status; confirm the timeline orders them correctly and visually distinguishes st
 
 ### Tests for User Story 3 ⚠️ (write first, confirm they fail before implementing)
 
-- [ ] T013 [P] [US3] Unit test `sortDecisionsForTimeline` in `tests/unit/timeline.test.ts`:
+- [X] T013 [P] [US3] Unit test `sortDecisionsForTimeline` in `tests/unit/timeline.test.ts`:
       Pending decisions ordered by `reviewDate`, Resolved decisions ordered by
       `resolution.resolvedAt`, a mixed set ordered correctly overall (most-recent-first), a
       same-date tie broken stably by `createdAt`, and `[]` in → `[]` out
 
 ### Implementation for User Story 3
 
-- [ ] T014 [US3] Implement `sortDecisionsForTimeline(decisions)` in `src/lib/timeline.ts` per
+- [X] T014 [US3] Implement `sortDecisionsForTimeline(decisions)` in `src/lib/timeline.ts` per
       contracts/decision-queries.md (T013 must fail first)
-- [ ] T015 [US3] Create `src/app/decisions/timeline/page.tsx`: same `searchParams`
+- [X] T015 [US3] Create `src/app/decisions/timeline/page.tsx`: same `searchParams`
       parsing/`countDecisions()`/empty-state pattern as `/decisions`, piping `listDecisions(
       filters)` through `sortDecisionsForTimeline`; renders `DecisionFilterControls` +
       `DecisionSearchInput` (reused unmodified) + the timeline view, using the existing phase 1
       status/verdict badge styles (FR-010) (depends on T006, T010, T011, T014)
-- [ ] T016 [US3] Add a "Timeline" link to
+- [X] T016 [US3] Add a "Timeline" link to
       `src/components/decisions/decisions-subnav.tsx`, alongside the existing "My Decisions" /
       "Dashboard" entries
 
@@ -157,16 +157,22 @@ timeline all work, individually and combined.
 
 ## Final Phase: Polish & Cross-Cutting Concerns
 
-- [ ] T017 [P] Run an automated accessibility check (axe) against `/decisions` (with filters/
+- [X] T017 [P] Run an automated accessibility check (axe) against `/decisions` (with filters/
       search active) and `/decisions/timeline`, in empty-state, no-matches, and populated states;
-      fix any violations (constitution Principle IV)
-- [ ] T018 [P] Run Lighthouse against production builds of `/decisions` and
+      fix any violations (constitution Principle IV) — 0 violations found across all 4 states, no
+      fixes needed
+- [X] T018 [P] Run Lighthouse against production builds of `/decisions` and
       `/decisions/timeline`; record Performance/Accessibility scores (constitution Principle VII)
-- [ ] T019 [P] Review `src/lib/decision-filters.ts`, `src/lib/timeline.ts`, the extended
+      — both scored Performance 82 / Accessibility 100, matching the established 78-91 range with
+      no new dependency introduced this phase
+- [X] T019 [P] Review `src/lib/decision-filters.ts`, `src/lib/timeline.ts`, the extended
       `src/lib/decisions.ts`, and the new components for strict TypeScript compliance with no
-      `any` (constitution Principle I)
-- [ ] T020 Manually walk through quickstart.md scenarios 1-13
-- [ ] T021 Update `specs/004-filter-search-timeline/plan.md`'s Constitution Check with the actual
+      `any` (constitution Principle I) — none found
+- [X] T020 Manually walk through quickstart.md scenarios 1-13 — 1-5 (filters), 9-11 (timeline),
+      and accessibility verified via a real browser (screenshots + axe); 6-7 (search across all 4
+      fields, combined with filters) and 8 (no-matches) verified via
+      `tests/integration/decision-filtering.test.ts` plus a browser spot-check on the risks field
+- [X] T021 Update `specs/004-filter-search-timeline/plan.md`'s Constitution Check with the actual
       measured Lighthouse scores from T018, mirroring how phases 1-3 documented theirs
 
 ---

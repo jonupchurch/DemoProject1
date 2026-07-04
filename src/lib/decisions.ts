@@ -9,6 +9,8 @@ import {
   ResolveInput,
 } from "@/lib/decision-types";
 import type { ResolvedDecisionForCalibration } from "@/lib/calibration";
+import type { DecisionFilters } from "@/lib/decision-filters";
+import type { Prisma } from "@prisma/client";
 
 export { CATEGORIES, VERDICTS } from "@/lib/decision-types";
 export type {
@@ -134,15 +136,53 @@ export async function createDecision(
   });
 }
 
-/** FR-004: all decisions for the current owner, regardless of status. */
-export async function listDecisions(): Promise<DecisionWithDetails[]> {
+/**
+ * FR-004: all decisions for the current owner, regardless of status.
+ *
+ * Phase 4: optionally narrowed by `filters` (FR-001–FR-004, FR-006, FR-007).
+ * Omitting `filters`, or passing one with every field empty, is identical to
+ * the original phase 1 behavior — existing callers are unaffected.
+ */
+export async function listDecisions(
+  filters?: DecisionFilters,
+): Promise<DecisionWithDetails[]> {
   const ownerId = await requireCurrentUserId();
 
+  const where: Prisma.DecisionWhereInput = { ownerId };
+
+  if (filters?.categories.length) {
+    where.category = { in: filters.categories };
+  }
+  if (filters?.statuses.length) {
+    where.status = { in: filters.statuses };
+  }
+  if (filters?.verdicts.length) {
+    where.resolution = { verdict: { in: filters.verdicts } };
+  }
+  if (filters?.search) {
+    const contains = { contains: filters.search, mode: "insensitive" as const };
+    where.OR = [
+      { title: contains },
+      { risks: contains },
+      { notes: contains },
+      { resolution: { learnings: contains } },
+    ];
+  }
+
   return prisma.decision.findMany({
-    where: { ownerId },
+    where,
     include: { options: { orderBy: { sortOrder: "asc" } }, resolution: true },
     orderBy: [{ reviewDate: "asc" }, { createdAt: "desc" }],
   });
+}
+
+/**
+ * Phase 4 FR-008: the current owner's *total* decision count, ignoring any
+ * filters — used only to distinguish "no decisions yet" from "no matches".
+ */
+export async function countDecisions(): Promise<number> {
+  const ownerId = await requireCurrentUserId();
+  return prisma.decision.count({ where: { ownerId } });
 }
 
 /** FR-005: full detail for one decision belonging to the current owner. */

@@ -1,7 +1,10 @@
 import Link from "next/link";
-import { listDecisions } from "@/lib/decisions";
+import { listDecisions, countDecisions } from "@/lib/decisions";
 import { formatDateOnly } from "@/lib/format";
 import { isReviewOverdue } from "@/lib/decision-status";
+import { parseDecisionFilters } from "@/lib/decision-filters";
+import { DecisionFilterControls } from "@/components/decisions/decision-filter-controls";
+import { DecisionSearchInput } from "@/components/decisions/decision-search-input";
 
 export const metadata = {
   title: "Your decisions — Decision Journal",
@@ -12,8 +15,16 @@ export const metadata = {
 // prerendered at build time.
 export const dynamic = "force-dynamic";
 
-export default async function DecisionsPage() {
-  const decisions = await listDecisions();
+export default async function DecisionsPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const filters = parseDecisionFilters(await searchParams);
+  const [decisions, totalCount] = await Promise.all([
+    listDecisions(filters),
+    countDecisions(),
+  ]);
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-10">
@@ -27,13 +38,24 @@ export default async function DecisionsPage() {
         </Link>
       </div>
 
-      {decisions.length === 0 ? (
+      {totalCount > 0 && (
+        <>
+          <DecisionSearchInput />
+          <DecisionFilterControls />
+        </>
+      )}
+
+      {totalCount === 0 ? (
         <p className="text-gray-600">
           You haven&apos;t logged any decisions yet.{" "}
           <Link href="/decisions/new" className="text-brand-600 underline">
             Log your first decision
           </Link>{" "}
           to get started.
+        </p>
+      ) : decisions.length === 0 ? (
+        <p className="text-gray-600">
+          No decisions match your current filters or search.
         </p>
       ) : (
         <ul className="flex flex-col gap-3">
