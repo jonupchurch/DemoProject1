@@ -1,7 +1,7 @@
 import "server-only";
 import { Decision, Option, Resolution } from "@prisma/client";
 import { prisma } from "@/lib/db";
-import { getCurrentOwnerId } from "@/lib/owner";
+import { requireCurrentUserId } from "@/lib/session";
 import {
   CATEGORIES,
   CreateDecisionInput,
@@ -108,7 +108,7 @@ export async function createDecision(
     throw new ValidationError(errors);
   }
 
-  const ownerId = await getCurrentOwnerId();
+  const ownerId = await requireCurrentUserId();
 
   return prisma.decision.create({
     data: {
@@ -135,7 +135,7 @@ export async function createDecision(
 
 /** FR-004: all decisions for the current owner, regardless of status. */
 export async function listDecisions(): Promise<DecisionWithDetails[]> {
-  const ownerId = await getCurrentOwnerId();
+  const ownerId = await requireCurrentUserId();
 
   return prisma.decision.findMany({
     where: { ownerId },
@@ -148,7 +148,7 @@ export async function listDecisions(): Promise<DecisionWithDetails[]> {
 export async function getDecision(
   id: string,
 ): Promise<DecisionWithDetails | null> {
-  const ownerId = await getCurrentOwnerId();
+  const ownerId = await requireCurrentUserId();
 
   return prisma.decision.findFirst({
     where: { id, ownerId },
@@ -170,7 +170,7 @@ export async function resolveDecision(
     throw new ValidationError(errors);
   }
 
-  const ownerId = await getCurrentOwnerId();
+  const ownerId = await requireCurrentUserId();
   const decision = await prisma.decision.findFirst({ where: { id, ownerId } });
   if (!decision) {
     throw new NotFoundError();
@@ -210,7 +210,7 @@ export async function updateResolution(
     throw new ValidationError(errors);
   }
 
-  const ownerId = await getCurrentOwnerId();
+  const ownerId = await requireCurrentUserId();
   const decision = await prisma.decision.findFirst({
     where: { id: decisionId, ownerId },
     include: { resolution: true },
@@ -250,7 +250,7 @@ export async function updateDecision(
     throw new ValidationError(errors);
   }
 
-  const ownerId = await getCurrentOwnerId();
+  const ownerId = await requireCurrentUserId();
   const decision = await prisma.decision.findFirst({ where: { id, ownerId } });
   if (!decision) {
     throw new NotFoundError();
@@ -288,6 +288,6 @@ export async function updateDecision(
 
 /** FR-012: delete a decision (and its options/resolution) regardless of status. */
 export async function deleteDecision(id: string): Promise<void> {
-  const ownerId = await getCurrentOwnerId();
+  const ownerId = await requireCurrentUserId();
   await prisma.decision.deleteMany({ where: { id, ownerId } });
 }

@@ -7,10 +7,11 @@ import {
   deleteDecision,
 } from "@/actions/decisions";
 import { listDecisions, getDecision, DecisionWithDetails } from "@/lib/decisions";
-import { ensureOwner, resetDecisions } from "./setup";
+import { ensureTestUser, mockSessionAs, resetDecisions } from "./setup";
 
 beforeAll(async () => {
-  await ensureOwner();
+  const user = await ensureTestUser();
+  mockSessionAs(user.id);
 });
 
 afterEach(async () => {

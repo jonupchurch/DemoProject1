@@ -22,3 +22,15 @@ vi.mock("next/navigation", async (importOriginal) => {
     redirect: vi.fn(),
   };
 });
+
+// auth() reads request-scoped cookies via Next's async context, which
+// doesn't exist outside a real request either. Tests control the "signed-in
+// as" user directly via tests/integration/setup.ts's mockSessionAs() rather
+// than exercising real Auth.js session verification (research.md §6 — OAuth
+// itself is never simulated in this suite).
+vi.mock("@/auth", () => ({
+  auth: vi.fn(),
+  signIn: vi.fn(),
+  signOut: vi.fn(),
+  handlers: { GET: vi.fn(), POST: vi.fn() },
+}));

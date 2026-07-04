@@ -1,15 +1,19 @@
-import Link from "next/link";
+import { redirect } from "next/navigation";
+import { auth } from "@/auth";
+import { SignInButtons } from "@/components/auth/sign-in-buttons";
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+
+  if (session?.user) {
+    redirect("/decisions");
+  }
+
   return (
     <main className="min-h-screen flex flex-col items-center justify-center gap-6 bg-gray-100">
       <h1 className="text-3xl font-bold text-brand-600">Decision Journal</h1>
-      <Link
-        href="/decisions"
-        className="rounded-card bg-brand-500 px-6 py-3 font-medium text-white hover:bg-brand-600"
-      >
-        View your decisions
-      </Link>
+      <p className="text-gray-600">Sign in to log and revisit your decisions.</p>
+      <SignInButtons />
     </main>
   );
 }

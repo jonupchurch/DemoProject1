@@ -15,6 +15,12 @@ export default defineConfig({
     env: {
       POSTGRES_PRISMA_URL: process.env.TEST_DATABASE_URL,
     },
+    // Integration test files share one real Postgres test database with
+    // unscoped cleanup (resetDecisions() deletes the whole table). Running
+    // test files in parallel lets one file's cleanup delete another file's
+    // in-flight fixtures — serialize file execution to avoid that class of
+    // flakiness rather than adding per-file data scoping.
+    fileParallelism: false,
   },
   resolve: {
     alias: {
