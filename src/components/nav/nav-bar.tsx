@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { auth } from "@/auth";
 import { NavLinks } from "./nav-links";
+import { MobileNavMenu } from "./mobile-nav-menu";
 import { ThemeToggle } from "./theme-toggle";
 import { UserMenu } from "@/components/auth/user-menu";
 import { SignInMenu } from "@/components/auth/sign-in-menu";
@@ -15,8 +16,16 @@ export async function NavBar() {
         <Link href="/" className="font-bold text-brand-600">
           Jon Upchurch Showcase
         </Link>
-        <div className="h-6 border-l border-gray-300 dark:border-gray-700" aria-hidden="true" />
-        <NavLinks isSignedIn={isSignedIn} />
+        <div
+          className="hidden h-6 border-l border-gray-300 dark:border-gray-700 md:block"
+          aria-hidden="true"
+        />
+        {/* NavLinks collapses into MobileNavMenu's hamburger below `md` — the
+            theme toggle and account/sign-in controls stay visible at every
+            width, since they're compact enough not to need collapsing. */}
+        <div className="hidden md:block">
+          <NavLinks isSignedIn={isSignedIn} />
+        </div>
         <div className="flex-1" />
         <ThemeToggle />
         {session?.user ? (
@@ -24,6 +33,7 @@ export async function NavBar() {
         ) : (
           <SignInMenu />
         )}
+        <MobileNavMenu isSignedIn={isSignedIn} />
       </div>
     </header>
   );

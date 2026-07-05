@@ -63,7 +63,15 @@ function useFlyout() {
 // public by design (constitution Principle IX / FR-005), so its flyout
 // trigger and "Map"/"List" entries stay visible either way — only its
 // "Add a Pin" entry (added in tasks.md T019) is conditional on `isSignedIn`.
-export function NavLinks({ isSignedIn }: { isSignedIn: boolean }) {
+interface NavLinksProps {
+  isSignedIn: boolean;
+  /** "vertical" is used inside the small-screen hamburger panel (mobile-nav-menu.tsx). */
+  orientation?: "horizontal" | "vertical";
+  /** Fired when any link is clicked — lets the hamburger panel close itself on navigation. */
+  onNavigate?: () => void;
+}
+
+export function NavLinks({ isSignedIn, orientation = "horizontal", onNavigate }: NavLinksProps) {
   const pathname = usePathname();
   const decisions = useFlyout();
   const travel = useFlyout();
@@ -72,9 +80,10 @@ export function NavLinks({ isSignedIn }: { isSignedIn: boolean }) {
   const travelLinks = isSignedIn
     ? [...TRAVEL_LINKS, { href: "/travel/new", label: "Add a Pin" }]
     : TRAVEL_LINKS;
+  const vertical = orientation === "vertical";
 
   return (
-    <nav className="flex items-center gap-4">
+    <nav className={vertical ? "flex flex-col items-stretch gap-1" : "flex items-center gap-4"}>
       {LINKS.map((link) => {
         const active = isActive(pathname, link.href);
         return (
@@ -82,10 +91,13 @@ export function NavLinks({ isSignedIn }: { isSignedIn: boolean }) {
             key={link.href}
             href={link.href}
             aria-current={active ? "page" : undefined}
+            onClick={onNavigate}
             className={
-              active
-                ? "font-medium text-brand-600"
-                : "text-gray-600 hover:text-brand-600 dark:text-gray-400"
+              vertical
+                ? `rounded-card px-3 py-2 text-sm ${active ? "font-medium text-brand-600" : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"}`
+                : active
+                  ? "font-medium text-brand-600"
+                  : "text-gray-600 hover:text-brand-600 dark:text-gray-400"
             }
           >
             {link.label}
@@ -93,16 +105,18 @@ export function NavLinks({ isSignedIn }: { isSignedIn: boolean }) {
         );
       })}
 
-      <div className="relative" ref={travel.containerRef}>
+      <div className={vertical ? undefined : "relative"} ref={travel.containerRef}>
         <button
           type="button"
           onClick={() => travel.setIsOpen((prev) => !prev)}
           aria-haspopup="true"
           aria-expanded={travel.isOpen}
           className={
-            travelActive
-              ? "font-medium text-brand-600"
-              : "text-gray-600 hover:text-brand-600 dark:text-gray-400"
+            vertical
+              ? `w-full rounded-card px-3 py-2 text-left text-sm ${travelActive ? "font-medium text-brand-600" : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"}`
+              : travelActive
+                ? "font-medium text-brand-600"
+                : "text-gray-600 hover:text-brand-600 dark:text-gray-400"
           }
         >
           Travel
@@ -112,7 +126,11 @@ export function NavLinks({ isSignedIn }: { isSignedIn: boolean }) {
           <div
             role="menu"
             aria-label="Travel"
-            className="absolute left-0 z-10 mt-2 w-40 rounded-card border border-gray-300 bg-white p-1 shadow-lg dark:border-gray-700 dark:bg-gray-800"
+            className={
+              vertical
+                ? "ml-3 mt-1 flex flex-col items-stretch gap-1 border-l border-gray-200 pl-3 dark:border-gray-700"
+                : "absolute left-0 z-10 mt-2 w-40 rounded-card border border-gray-300 bg-white p-1 shadow-lg dark:border-gray-700 dark:bg-gray-800"
+            }
           >
             {travelLinks.map((link) => {
               const active = isActive(pathname, link.href);
@@ -122,7 +140,10 @@ export function NavLinks({ isSignedIn }: { isSignedIn: boolean }) {
                   href={link.href}
                   role="menuitem"
                   aria-current={active ? "page" : undefined}
-                  onClick={() => travel.setIsOpen(false)}
+                  onClick={() => {
+                    travel.setIsOpen(false);
+                    onNavigate?.();
+                  }}
                   className={
                     active
                       ? "block rounded-card px-3 py-2 text-sm font-medium text-brand-600"
@@ -143,16 +164,18 @@ export function NavLinks({ isSignedIn }: { isSignedIn: boolean }) {
               (My Decisions/Timeline/Dashboard) previously lived in an
               always-visible bar under the page header; moving them here
               declutters the page and scales as more mini-apps get sub-pages. */}
-          <div className="relative" ref={decisions.containerRef}>
+          <div className={vertical ? undefined : "relative"} ref={decisions.containerRef}>
             <button
               type="button"
               onClick={() => decisions.setIsOpen((prev) => !prev)}
               aria-haspopup="true"
               aria-expanded={decisions.isOpen}
               className={
-                decisionsActive
-                  ? "font-medium text-brand-600"
-                  : "text-gray-600 hover:text-brand-600 dark:text-gray-400"
+                vertical
+                  ? `w-full rounded-card px-3 py-2 text-left text-sm ${decisionsActive ? "font-medium text-brand-600" : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"}`
+                  : decisionsActive
+                    ? "font-medium text-brand-600"
+                    : "text-gray-600 hover:text-brand-600 dark:text-gray-400"
               }
             >
               Decisions
@@ -162,7 +185,11 @@ export function NavLinks({ isSignedIn }: { isSignedIn: boolean }) {
               <div
                 role="menu"
                 aria-label="Decisions"
-                className="absolute left-0 z-10 mt-2 w-40 rounded-card border border-gray-300 bg-white p-1 shadow-lg dark:border-gray-700 dark:bg-gray-800"
+                className={
+                  vertical
+                    ? "ml-3 mt-1 flex flex-col items-stretch gap-1 border-l border-gray-200 pl-3 dark:border-gray-700"
+                    : "absolute left-0 z-10 mt-2 w-40 rounded-card border border-gray-300 bg-white p-1 shadow-lg dark:border-gray-700 dark:bg-gray-800"
+                }
               >
                 {DECISIONS_LINKS.map((link) => {
                   const active = isActive(pathname, link.href);
@@ -172,7 +199,10 @@ export function NavLinks({ isSignedIn }: { isSignedIn: boolean }) {
                       href={link.href}
                       role="menuitem"
                       aria-current={active ? "page" : undefined}
-                      onClick={() => decisions.setIsOpen(false)}
+                      onClick={() => {
+                        decisions.setIsOpen(false);
+                        onNavigate?.();
+                      }}
                       className={
                         active
                           ? "block rounded-card px-3 py-2 text-sm font-medium text-brand-600"
@@ -190,10 +220,13 @@ export function NavLinks({ isSignedIn }: { isSignedIn: boolean }) {
           <Link
             href="/contact"
             aria-current={isActive(pathname, "/contact") ? "page" : undefined}
+            onClick={onNavigate}
             className={
-              isActive(pathname, "/contact")
-                ? "font-medium text-brand-600"
-                : "text-gray-600 hover:text-brand-600 dark:text-gray-400"
+              vertical
+                ? `rounded-card px-3 py-2 text-sm ${isActive(pathname, "/contact") ? "font-medium text-brand-600" : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"}`
+                : isActive(pathname, "/contact")
+                  ? "font-medium text-brand-600"
+                  : "text-gray-600 hover:text-brand-600 dark:text-gray-400"
             }
           >
             Contact
