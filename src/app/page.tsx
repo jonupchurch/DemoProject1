@@ -87,6 +87,32 @@ export default async function Home() {
         },
       ],
     },
+    // TEMPORARY placeholder slide (lorem ipsum) proving the carousel
+    // still handles 3+ slides correctly — remove once a real third
+    // mini-app ships, or replace its content with that app's real copy.
+    {
+      id: "lorem-ipsum-placeholder",
+      title: "Lorem Ipsum",
+      subtitle:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      backgroundImage: "/img/image3.png",
+      // Only used as a fallback if backgroundImage is ever removed.
+      backgroundClassName: "bg-gradient-to-br from-gray-700 via-gray-600 to-gray-900",
+      features: [
+        {
+          title: "Lorem ipsum dolor sit amet",
+          body: "Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        },
+        {
+          title: "Ut enim ad minim veniam",
+          body: "Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        },
+        {
+          title: "Duis aute irure dolor",
+          body: "In reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+        },
+      ],
+    },
   ];
 
   return (

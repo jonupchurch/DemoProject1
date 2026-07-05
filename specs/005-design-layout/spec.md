@@ -207,6 +207,10 @@ the Sign Out control is styled as a bordered/padded button.
   work correctly before any real second mini-app existed. **Resolved 2026-07-04**: replaced with
   Travel Photo Map's real copy/CTA once that app shipped (`specs/006-travel-photo-map/`) — the
   same background photo was kept, only the text/features/CTA changed.
+- A new lorem-ipsum third carousel slide was added 2026-07-04, the same kind of temporary
+  placeholder as above, this time proving 3+-slide behavior ahead of a real third mini-app. It uses
+  `/img/image3.png` as its background. Expect it to be replaced with a real mini-app's copy/CTA the
+  same way the second placeholder was, once that app ships.
 - A slide's background image is optional; without one, a gradient (matching the site's existing
   design tokens) is used instead. The Decision Journal slide's image is a real photo supplied by
   the project owner; future slides may or may not have one.
